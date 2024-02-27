@@ -23,7 +23,7 @@ jobs:
           node-version: 18.x
 
       - name: Install dependencies
-        working-directory: service
+        working-directory: ./
         run: npm install
 
       - name: Stop old server (ignore error)
