@@ -44,4 +44,4 @@ jobs:
           RUNNER_TRACKING_ID: ""
         run: |
           cd ~/source
-          npm run start --tunnel
+          npx expo start --tunnel
