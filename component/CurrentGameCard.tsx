@@ -37,8 +37,10 @@ export default function Page({item}: IPage) {
             colors={[item.bgColor1, item.bgColor2]}
         >
             <View>
-                <Image style={styles.bgImage} resizeMode="cover"
-                       source={item.imgPath}/>
+                {isDefault ?
+                    <Image style={styles.bgImage} resizeMode="cover"
+                           source={item.imgPath}
+                    /> : null}
                 <TouchableOpacity onPress={handlePress}>
                     <View style={styles.contentsWrap}>
                         <Image
