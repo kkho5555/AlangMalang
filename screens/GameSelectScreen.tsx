@@ -8,15 +8,12 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { ScreenProps } from '../types';
-import Carousel from '../component/Carousel';
+import GameCarousel from '../component/GameCarousel';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
 import GameHeader from '../component/GameHeader';
-
-
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
+import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 
 export default function GameSelectScreen({ navigation }: ScreenProps) {
     const gameList = useAppSelector((state) => state.gameList);
@@ -34,7 +31,7 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
 
             <View style={styles.carouselWarp}>
                 <View style={styles.carouselOuter}>
-                    <Carousel GameData={gameList} navigation={navigation} />
+                    <GameCarousel GameData={gameList} navigation={navigation} />
                 </View>
             </View>
 
@@ -93,7 +90,7 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
                             <View style={styles.iconWrap}>
                                 <Image
                                     style={styles.iconPeople}
-                                    resizeMode="cover"
+                                    resizeMode="contain"
                                     source={require('../assets/icons/icon-people.png')}
                                 />
                             </View>
@@ -110,7 +107,7 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
                             <View style={styles.iconWrap}>
                                 <Image
                                     style={styles.iconSetting}
-                                    resizeMode="cover"
+                                    resizeMode="contain"
                                     source={require('../assets/icons/icon-setting.png')}
                                 />
                             </View>
@@ -133,11 +130,11 @@ const styles = StyleSheet.create({
     mainText: {
         color: Color.mainText,
         textAlign: 'center',
-        fontSize: 50,
+        fontSize: widthScale(50),
         fontWeight: 'bold',
     },
     carouselOuter: {
-        marginTop: 35,
+        marginTop: heightScale(35),
         justifyContent: 'center',
         flexDirection: 'row',
         alignItems: 'center',
@@ -146,8 +143,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     bottomContainer: {
-        marginTop: 40,
-        paddingHorizontal: 40,
+        marginTop: heightScale(40),
+        paddingHorizontal: widthScale(40),
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -157,42 +154,43 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 20,
-        paddingVertical: 15,
+        paddingHorizontal: widthScale(20),
+        paddingVertical: heightScale(15),
         backgroundColor: '#434642',
         borderRadius: 8,
     },
     rankTitleText: {
-        fontSize: 20,
+        fontSize: widthScale(20),
         fontWeight: '600',
         color: '#898B89',
     },
     divider: {
-        marginHorizontal: 16,
+        marginHorizontal: widthScale(16),
     },
     rankWrap: {
         flexDirection: 'row',
+        alignItems: 'center',
     },
     rankOuter: {
-        paddingVertical: 4,
-        paddingHorizontal: 8,
+        paddingHorizontal: widthScale(8),
+        paddingVertical: heightScale(4),
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 999,
     },
     iconCrown: {
-        width: 20,
-        height: 16,
+        width: widthScale(20),
+        height: heightScale(16),
     },
     crownRankTitle: {
-        marginLeft: 8,
+        marginLeft: widthScale(8),
     },
     rankText: {
-        marginLeft: 8,
-        marginRight: 16,
+        marginLeft: widthScale(8),
+        marginRight: widthScale(16),
         fontWeight: '600',
-        fontSize: 20,
+        fontSize: widthScale(20),
         color: '#FFFFFF',
         letterSpacing: -1,
     },
@@ -204,26 +202,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     gameSettingWrap: {
-        marginLeft: 27,
+        marginLeft: widthScale(27),
     },
     iconWrap: {
-        height: 36,
-        width: 38,
+        width: widthScale(38),
+        height: heightScale(36),
         justifyContent: 'center',
         alignItems: 'center',
     },
     iconPeople: {
-        width: 38,
-        height: 26,
+        width: widthScale(38),
+        height: heightScale(26),
     },
     iconSetting: {
-        width: 34,
-        height: 36,
+        width: widthScale(34),
+        height: heightScale(36),
     },
     settingText: {
         color: '#B9BAB9',
         fontWeight: '500',
-        fontSize: 20,
-        marginTop: 8,
+        fontSize: widthScale(20),
+        marginTop: heightScale(8),
     },
 });

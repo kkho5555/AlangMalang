@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { ScreenProps } from '../types';
-import { Color, Padding } from '../assets/GlobalStyles';
+import { Color } from '../assets/GlobalStyles';
+import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 
 
 interface IGameHeader {
@@ -55,8 +56,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Color.background,
-        paddingHorizontal: 30,
-        paddingTop: Padding.ContainerPaddingTop,
+        paddingHorizontal: widthScale(30),
     },
     headerContainer: {
         flexDirection: 'row',
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         flex: 1,
         color: Color.mainText,
         textAlign: 'center',
-        fontSize: 50,
+        fontSize: moderateScale(50, 1),
         fontWeight: 'bold',
     },
     settingWrap: {
@@ -78,17 +78,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iconArrow: {
-        width: 48,
-        height: 36,
+        width: moderateScale(48),
+        height: moderateScale(36),
     },
     iconSetting: {
-        width: 40,
-        height: 40,
+        width: moderateScale(40),
+        height: moderateScale(40),
     },
     settingText: {
         color: '#B9BAB9',
         fontWeight: '500',
-        fontSize: 20,
-        marginTop: 12,
+        fontSize: moderateScale(20),
+        marginTop: moderateScale(12),
     },
 });

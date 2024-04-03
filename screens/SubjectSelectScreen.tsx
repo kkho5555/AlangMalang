@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { ScreenProps } from '../types';
 import { Color, Padding } from '../assets/GlobalStyles';
+import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 import GameHeader from '../component/GameHeader';
-
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default function InGameScreen({ navigation }: ScreenProps) {
     const [currentSubject, setCurrentSubject] = React.useState(-1);
@@ -49,34 +47,36 @@ export default function InGameScreen({ navigation }: ScreenProps) {
     return (
         <View className="flex-1 items-center justify-center" style={styles.container}>
             <GameHeader title={'게임설정'} navigation={navigation} isBack={true} isSetting={true} />
+            <ScrollView>
+                <View style={styles.subContainer}>
 
-            <View style={styles.subContainer}>
-                {SubjectData.map((subject, index) => (
-                    <TouchableOpacity key={index}
-                                      onPress={() => subject.imgPath > 0 ? handlerSelectSubject(index) : ''}>
-                        {
-                            subject.imgPath > 0 ?
-                                (
-                                    <View
-                                        style={[styles.subjectWrapper, currentSubject === index && styles.currentSubjectWrapper]}>
-                                        <Image style={styles.subjectIcon} resizeMode="cover"
-                                               source={subject.imgPath} />
-                                        <Text style={styles.subjectText}>{subject.subject}</Text>
-                                    </View>
-                                ) :
-                                (
-                                    <View
-                                        style={[styles.subjectWrapper, styles.pendingSubjectWrapper]}>
-                                        <Image style={styles.subjectIcon} resizeMode="cover"
-                                               source={subject.imgPath} />
-                                        <Text
-                                            style={[styles.subjectText, styles.pendingSubjectText]}>{subject.subject}</Text>
-                                    </View>
-                                )
-                        }
-                    </TouchableOpacity>
-                ))}
-            </View>
+                    {SubjectData.map((subject, index) => (
+                        <TouchableOpacity key={index}
+                                          onPress={() => subject.imgPath > 0 ? handlerSelectSubject(index) : ''}>
+                            {
+                                subject.imgPath > 0 ?
+                                    (
+                                        <View
+                                            style={[styles.subjectWrapper, currentSubject === index && styles.currentSubjectWrapper]}>
+                                            <Image style={styles.subjectIcon} resizeMode="cover"
+                                                   source={subject.imgPath} />
+                                            <Text style={styles.subjectText}>{subject.subject}</Text>
+                                        </View>
+                                    ) :
+                                    (
+                                        <View
+                                            style={[styles.subjectWrapper, styles.pendingSubjectWrapper]}>
+                                            <Image style={styles.subjectIcon} resizeMode="cover"
+                                                   source={subject.imgPath} />
+                                            <Text
+                                                style={[styles.subjectText, styles.pendingSubjectText]}>{subject.subject}</Text>
+                                        </View>
+                                    )
+                            }
+                        </TouchableOpacity>
+                    ))}
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Color.background,
-        paddingHorizontal: 30,
+        paddingHorizontal: widthScale(30),
         paddingTop: Padding.ContainerPaddingTop,
     },
     subContainer: {
@@ -94,23 +94,23 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        marginTop: 65,
+        marginTop: heightScale(65),
     },
     subjectWrapper: {
-        height: 120,
-        width: 371,
+        height: moderateScale(120),
+        width: moderateScale(371),
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
         borderStyle: 'solid',
         borderWidth: 1,
-        borderRadius: 24,
+        borderRadius: moderateScale(24),
         borderColor: '#FFFFFF',
         backgroundColor: '#434642',
-        paddingHorizontal: 43,
-        paddingVertical: 36,
-        marginVertical: 10,
-        marginHorizontal: 20,
+        paddingHorizontal: widthScale(43),
+        paddingVertical: heightScale(36),
+        marginHorizontal: widthScale(20),
+        marginVertical: heightScale(10),
     },
     currentSubjectWrapper: {
         backgroundColor: '#13FF8E',
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowRadius: 20,
+        shadowRadius: moderateScale(20),
         elevation: 20,
         shadowOpacity: 1,
         borderColor: '#b7ffdd',
@@ -131,15 +131,15 @@ const styles = StyleSheet.create({
     subjectText: {
         fontWeight: '600',
         color: '#FFFFFF',
-        fontSize: 40,
-        letterSpacing: -1,
-        marginLeft: 25,
+        fontSize: widthScale(40),
+        letterSpacing: moderateScale(-1),
+        marginLeft: moderateScale(25),
     },
     pendingSubjectText: {
         color: '#727471',
     },
     subjectIcon: {
-        width: 63,
-        height: 52,
+        width: moderateScale(63),
+        height: moderateScale(52),
     },
 });

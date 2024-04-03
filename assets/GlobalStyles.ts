@@ -1,3 +1,5 @@
+import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
+
 /*colors*/
 export const Color: any ={
     background: '#2C2F2B',
@@ -6,5 +8,5 @@ export const Color: any ={
 
 /*padding*/
 export const Padding: any ={
-    ContainerPaddingTop: 85,
+    ContainerPaddingTop: moderateScale(85, 2.5),
 }
