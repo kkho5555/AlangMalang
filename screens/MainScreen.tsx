@@ -15,6 +15,10 @@ import { fetchGameData } from '../features/game/gameSlice';
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
+const logoWidth = screenWidth * 0.7;
+const logoHeight = logoWidth * (376 / 871);
+const buttonWidth = logoWidth - 140;
+
 export default function MainScreen({ navigation }: ScreenProps) {
     const dispatch = useAppDispatch();
     dispatch(fetchGameData());
@@ -37,10 +41,10 @@ export default function MainScreen({ navigation }: ScreenProps) {
     );
 }
 const CardItem = ({
-    title,
-    subtitle,
-    navigation,
-}: {
+                      title,
+                      subtitle,
+                      navigation,
+                  }: {
     title: string;
     subtitle: string;
     navigation: ScreenNavigationProp;
@@ -63,16 +67,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     images: {
-        // width: screenWidth * 0.7,
-        // height: screenHeight * 0.45,
-        width: 871,
-        height: 376,
-        // marginBottom: screenHeight * 0.05,
-        marginBottom: 45,
+        width: logoWidth,
+        height: logoHeight,
+        marginBottom: screenHeight * 0.05,
     },
     button: {
-        // width: (screenWidth * 0.7 - 140),
-        width: 733,
+        width: buttonWidth,
         backgroundColor: 'rgba(20, 23, 19, 0.6)',
         paddingVertical: screenHeight * 0.03,
         borderRadius: 8,

@@ -11,21 +11,26 @@ import { ScreenProps } from '../types';
 import Carousel from '../component/Carousel';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAppSelector } from '../app/hooks';
+import { Color, Padding } from '../assets/GlobalStyles';
+import GameHeader from '../component/GameHeader';
+
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 export default function GameSelectScreen({ navigation }: ScreenProps) {
+    const gameList = useAppSelector((state) => state.gameList);
     const handlerTeamSetting = () => {
         console.log('handlerTeamSetting');
     };
-    const gameList = useAppSelector((state) => state.gameList);
+
+    const handlerGameSetting = () => {
+        console.log('handlerGameSetting');
+    };
+
     return (
-        <View
-            className="flex-1 items-center justify-center"
-            style={styles.container}
-        >
-            <Text style={styles.mainText}>게임선택하기</Text>
+        <View className="flex-1 items-center justify-center" style={styles.container}>
+            <GameHeader title={'어떤 게임을 할까요?'} isBack={false} isSetting={false} navigation={navigation}/>
 
             <View style={styles.carouselWarp}>
                 <View style={styles.carouselOuter}>
@@ -122,21 +127,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#2C2F2B',
+        backgroundColor: Color.background,
+        paddingTop: Padding.ContainerPaddingTop,
     },
     mainText: {
-        fontSize: 48,
-        color: '#F3F3F3',
+        color: Color.mainText,
+        textAlign: 'center',
+        fontSize: 50,
         fontWeight: 'bold',
-        marginBottom: screenHeight * 0.04,
     },
     carouselOuter: {
+        marginTop: 35,
         justifyContent: 'center',
         flexDirection: 'row',
         alignItems: 'center',
     },
     carouselWarp: {
-        marginTop: 36,
         alignItems: 'center',
     },
     bottomContainer: {
