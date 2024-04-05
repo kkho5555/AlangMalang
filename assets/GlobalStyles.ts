@@ -8,5 +8,5 @@ export const Color: any ={
 
 /*padding*/
 export const Padding: any ={
-    ContainerPaddingTop: moderateScale(85, 2.5),
+    ContainerPaddingTop: heightScale(85),
 }
