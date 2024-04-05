@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
 import { ScreenProps } from '../types';
 import { Color, Padding } from '../assets/GlobalStyles';
 import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
@@ -41,31 +41,32 @@ export default function InGameScreen({ navigation }: ScreenProps) {
 
         setTimeout(() => {
             navigation.navigate('PlayerSettings');
-        }, 1000);
+        }, 100);
     };
 
     return (
         <View className="flex-1 items-center justify-center" style={styles.container}>
-            <GameHeader title={'게임설정'} navigation={navigation} isBack={true} isSetting={true} />
+            <GameHeader title={'주제선택'} navigation={navigation} isBack={true} isTeamSetting={false} isPlaySetting={true}
+                        isRefreshSetting={false} />
             <ScrollView>
                 <View style={styles.subContainer}>
 
                     {SubjectData.map((subject, index) => (
-                        <TouchableOpacity key={index}
-                                          onPress={() => subject.imgPath > 0 ? handlerSelectSubject(index) : ''}>
+                        <Pressable key={index}
+                                   onPress={() => subject.imgPath > 0 ? handlerSelectSubject(index) : ''}>
                             {
                                 subject.imgPath > 0 ?
                                     (
-                                        <View
-                                            style={[styles.subjectWrapper, currentSubject === index && styles.currentSubjectWrapper]}>
+                                        <View key={index}
+                                              style={[styles.subjectWrapper, currentSubject === index && styles.currentSubjectWrapper]}>
                                             <Image style={styles.subjectIcon} resizeMode="cover"
                                                    source={subject.imgPath} />
                                             <Text style={styles.subjectText}>{subject.subject}</Text>
                                         </View>
                                     ) :
                                     (
-                                        <View
-                                            style={[styles.subjectWrapper, styles.pendingSubjectWrapper]}>
+                                        <View key={index}
+                                              style={[styles.subjectWrapper, styles.pendingSubjectWrapper]}>
                                             <Image style={styles.subjectIcon} resizeMode="cover"
                                                    source={subject.imgPath} />
                                             <Text
@@ -73,7 +74,7 @@ export default function InGameScreen({ navigation }: ScreenProps) {
                                         </View>
                                     )
                             }
-                        </TouchableOpacity>
+                        </Pressable>
                     ))}
                 </View>
             </ScrollView>
@@ -97,19 +98,18 @@ const styles = StyleSheet.create({
         marginTop: heightScale(65),
     },
     subjectWrapper: {
-        height: moderateScale(120),
-        width: moderateScale(371),
+        height: heightScale(120),
+        width: widthScale(371),
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
         borderStyle: 'solid',
         borderWidth: 1,
-        borderRadius: moderateScale(24),
+        borderRadius: heightScale(24),
         borderColor: '#FFFFFF',
         backgroundColor: '#434642',
-        paddingHorizontal: widthScale(43),
-        paddingVertical: heightScale(36),
-        marginHorizontal: widthScale(20),
+        paddingHorizontal: heightScale(43),
+        marginHorizontal: heightScale(20),
         marginVertical: heightScale(10),
     },
     currentSubjectWrapper: {
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowRadius: moderateScale(20),
-        elevation: 20,
+        shadowRadius: heightScale(20),
+        elevation: heightScale(20),
         shadowOpacity: 1,
         borderColor: '#b7ffdd',
         borderWidth: 6,
@@ -131,15 +131,15 @@ const styles = StyleSheet.create({
     subjectText: {
         fontWeight: '600',
         color: '#FFFFFF',
-        fontSize: widthScale(40),
-        letterSpacing: moderateScale(-1),
-        marginLeft: moderateScale(25),
+        fontSize: heightScale(40),
+        letterSpacing: heightScale(-1),
+        marginLeft: heightScale(25),
     },
     pendingSubjectText: {
         color: '#727471',
     },
     subjectIcon: {
-        width: moderateScale(63),
-        height: moderateScale(52),
+        width: heightScale(63),
+        height: heightScale(52),
     },
 });

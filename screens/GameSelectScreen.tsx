@@ -27,7 +27,7 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
 
     return (
         <View className="flex-1 items-center justify-center" style={styles.container}>
-            <GameHeader title={'어떤 게임을 할까요?'} isBack={false} isSetting={false} navigation={navigation}/>
+            <GameHeader title={'어떤 게임을 할까요?'} isBack={false} isTeamSetting={false} navigation={navigation} isPlaySetting={false} isRefreshSetting={false    } />
 
             <View style={styles.carouselWarp}>
                 <View style={styles.carouselOuter}>
@@ -36,54 +36,56 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
             </View>
 
             <View style={styles.bottomContainer}>
-                <View style={styles.rankContainer}>
-                    <Text style={styles.rankTitleText}>전체 랭킹</Text>
-                    <Text style={[styles.rankTitleText, styles.divider]}>
-                        |
-                    </Text>
-                    <View style={styles.rankWrap}>
-                        <LinearGradient
-                            style={styles.rankOuter}
-                            colors={['#ffa235', '#fff3b2']}
-                        >
-                            <Image
-                                style={styles.iconCrown}
-                                resizeMode="cover"
-                                source={require('../assets/icons/icon-crown.png')}
-                            />
-                            <Text style={styles.crownRankTitle}>1st</Text>
-                        </LinearGradient>
-                        <Text style={styles.rankText}>심연의 그린</Text>
+                <TouchableOpacity onPress={() => navigation.navigate('OverallRanking')}>
+                    <View style={styles.rankContainer}>
+                        <Text style={styles.rankTitleText}>전체 랭킹</Text>
+                        <Text style={[styles.rankTitleText, styles.divider]}>
+                            |
+                        </Text>
+                        <View style={styles.rankWrap}>
+                            <LinearGradient
+                                style={styles.rankOuter}
+                                colors={['#ffa235', '#fff3b2']}
+                            >
+                                <Image
+                                    style={styles.iconCrown}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-crown.png')}
+                                />
+                                <Text style={styles.crownRankTitle}>1st</Text>
+                            </LinearGradient>
+                            <Text style={styles.rankText}>심연의 그린</Text>
+                        </View>
+                        <View style={styles.rankWrap}>
+                            <LinearGradient
+                                style={styles.rankOuter}
+                                colors={['#D0D1D0', '#D0D1D0']}
+                            >
+                                <Image
+                                    style={styles.iconCrown}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-crown.png')}
+                                />
+                                <Text style={styles.crownRankTitle}>2nd</Text>
+                            </LinearGradient>
+                            <Text style={styles.rankText}>우아한 코랄</Text>
+                        </View>
+                        <View style={styles.rankWrap}>
+                            <LinearGradient
+                                style={styles.rankOuter}
+                                colors={['#D0D1D0', '#D0D1D0']}
+                            >
+                                <Image
+                                    style={styles.iconCrown}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-crown.png')}
+                                />
+                                <Text style={styles.crownRankTitle}>3rd</Text>
+                            </LinearGradient>
+                            <Text style={styles.rankText}>진중한 블루</Text>
+                        </View>
                     </View>
-                    <View style={styles.rankWrap}>
-                        <LinearGradient
-                            style={styles.rankOuter}
-                            colors={['#D0D1D0', '#D0D1D0']}
-                        >
-                            <Image
-                                style={styles.iconCrown}
-                                resizeMode="cover"
-                                source={require('../assets/icons/icon-crown.png')}
-                            />
-                            <Text style={styles.crownRankTitle}>2nd</Text>
-                        </LinearGradient>
-                        <Text style={styles.rankText}>우아한 코랄</Text>
-                    </View>
-                    <View style={styles.rankWrap}>
-                        <LinearGradient
-                            style={styles.rankOuter}
-                            colors={['#D0D1D0', '#D0D1D0']}
-                        >
-                            <Image
-                                style={styles.iconCrown}
-                                resizeMode="cover"
-                                source={require('../assets/icons/icon-crown.png')}
-                            />
-                            <Text style={styles.crownRankTitle}>3rd</Text>
-                        </LinearGradient>
-                        <Text style={styles.rankText}>진중한 블루</Text>
-                    </View>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.settingContainer}>
                     <TouchableOpacity onPress={handlerTeamSetting}>
                         <View style={styles.settingWrap}>
@@ -130,7 +132,7 @@ const styles = StyleSheet.create({
     mainText: {
         color: Color.mainText,
         textAlign: 'center',
-        fontSize: widthScale(50),
+        fontSize: heightScale(50),
         fontWeight: 'bold',
     },
     carouselOuter: {
@@ -144,7 +146,7 @@ const styles = StyleSheet.create({
     },
     bottomContainer: {
         marginTop: heightScale(40),
-        paddingHorizontal: widthScale(40),
+        paddingHorizontal: heightScale(40),
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -154,25 +156,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: widthScale(20),
+        paddingHorizontal: heightScale(20),
         paddingVertical: heightScale(15),
         backgroundColor: '#434642',
-        borderRadius: 8,
+        borderRadius: heightScale(8),
     },
     rankTitleText: {
-        fontSize: widthScale(20),
+        fontSize: heightScale(20),
         fontWeight: '600',
         color: '#898B89',
     },
     divider: {
-        marginHorizontal: widthScale(16),
+        marginHorizontal: heightScale(16),
     },
     rankWrap: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     rankOuter: {
-        paddingHorizontal: widthScale(8),
+        paddingHorizontal: heightScale(8),
         paddingVertical: heightScale(4),
         flexDirection: 'row',
         justifyContent: 'center',
@@ -180,19 +182,22 @@ const styles = StyleSheet.create({
         borderRadius: 999,
     },
     iconCrown: {
-        width: widthScale(20),
+        width: heightScale(20),
         height: heightScale(16),
     },
     crownRankTitle: {
-        marginLeft: widthScale(8),
+        fontSize: heightScale(16),
+        letterSpacing: heightScale(-0.2),
+        fontWeight: "500",
+        marginLeft: heightScale(8),
     },
     rankText: {
-        marginLeft: widthScale(8),
-        marginRight: widthScale(16),
+        marginLeft: heightScale(8),
+        marginRight: heightScale(16),
         fontWeight: '600',
-        fontSize: widthScale(20),
+        fontSize: heightScale(20),
         color: '#FFFFFF',
-        letterSpacing: -1,
+        letterSpacing: heightScale(-1),
     },
     settingContainer: {
         flexDirection: 'row',
@@ -202,26 +207,26 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     gameSettingWrap: {
-        marginLeft: widthScale(27),
+        marginLeft: heightScale(27),
     },
     iconWrap: {
-        width: widthScale(38),
+        width: heightScale(38),
         height: heightScale(36),
         justifyContent: 'center',
         alignItems: 'center',
     },
     iconPeople: {
-        width: widthScale(38),
+        width: heightScale(38),
         height: heightScale(26),
     },
     iconSetting: {
-        width: widthScale(34),
+        width: heightScale(34),
         height: heightScale(36),
     },
     settingText: {
         color: '#B9BAB9',
         fontWeight: '500',
-        fontSize: widthScale(20),
+        fontSize: heightScale(20),
         marginTop: heightScale(8),
     },
 });

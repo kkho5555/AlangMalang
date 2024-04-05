@@ -66,15 +66,15 @@ const styles = StyleSheet.create({
         marginBottom: heightScale(116),
     },
     button: {
-        width: widthScale(855),
+        width: heightScale(855),
         backgroundColor: 'rgba(20, 23, 19, 0.6)',
         paddingVertical: heightScale(20),
-        borderRadius: 8,
+        borderRadius: heightScale(8),
     },
     buttonText: {
         color: '#ffffff',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: moderateScale(25),
+        fontSize: heightScale(25),
     },
 });

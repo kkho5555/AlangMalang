@@ -9,6 +9,7 @@ import InGameScreen from '../screens/InGameScreen';
 import EndGameScreen from '../screens/EndGameScreen';
 import SubjectSelectScreen from '../screens/SubjectSelectScreen';
 import PlayerSettingsScreen from '../screens/PlayerSettingsScreen';
+import OverallRankingScreen from '../screens/OverallRankingScreen';
 
 const Stack = createNativeStackNavigator();
 //RootStackParamList
@@ -19,6 +20,7 @@ export type RootStackParamList = {
     SubjectSelect: undefined;
     InGame: undefined;
     EndGame: undefined;
+    OverallRankingScreen: undefined;
 };
 
 export default function MainNavigator(prop: { onLayout: () => void }) {
@@ -45,6 +47,7 @@ export default function MainNavigator(prop: { onLayout: () => void }) {
                 />
                 <Stack.Screen name="InGame" component={InGameScreen} />
                 <Stack.Screen name="EndGame" component={EndGameScreen} />
+                <Stack.Screen name="OverallRanking" component={OverallRankingScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>

@@ -7,6 +7,7 @@ import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 
 export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
     const [currentTeam, setCurrentTeam] = React.useState(-1);
+    const [isSelectingRandomTeam, setIsSelectingRandomTeam] = React.useState(false);
 
     const TeamList = [
         {
@@ -23,25 +24,54 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
         },
     ];
 
-    const handlerSelectRandomTeam = () => {
-        setCurrentTeam(-1);
+    const selectRandomTeam = () => {
+        setIsSelectingRandomTeam(true);
+
+        let prevIndex = currentTeam;
+        const interval = setInterval(() => {
+            let randomIndex = Math.floor(Math.random() * TeamList.length);
+
+            while (randomIndex === prevIndex) {
+                randomIndex = Math.floor(Math.random() * TeamList.length);
+            }
+
+            setCurrentTeam(randomIndex);
+            prevIndex = randomIndex;
+        }, 150);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            setIsSelectingRandomTeam(false);
+        }, 2000);
     };
+
+    const handlerSelectRandomTeam = () => {
+        if (!isSelectingRandomTeam) {
+            selectRandomTeam();
+        }
+    };
+
     const handlerSelectTeam = (index: number) => {
-        setCurrentTeam(index);
+        if (!isSelectingRandomTeam) {
+            setCurrentTeam(index);
+        }
     };
 
     const handlerStartGame = () => {
-        navigation.navigate('InGame');
+        if (!isSelectingRandomTeam && currentTeam > -1) {
+            navigation.navigate('InGame');
+        }
     };
 
     return (
         <View className="flex-1 items-center justify-center" style={styles.container}>
-            <GameHeader title={'누가 플레이 하나요?'} navigation={navigation} isBack={true} isSetting={true} />
+            <GameHeader title={'누가 플레이 하나요?'} navigation={navigation} isBack={true} isTeamSetting={true}
+                        isPlaySetting={false} isRefreshSetting={false} />
 
             <View style={styles.subContainer}>
-                <TouchableOpacity onPress={handlerSelectRandomTeam}>
+                <TouchableOpacity onPress={handlerSelectRandomTeam} disabled={isSelectingRandomTeam}>
                     <View
-                        style={[styles.randomWrapper, currentTeam === -1 && styles.selectRandomWrapper]}>
+                        style={[styles.randomWrapper]}>
                         <Image resizeMode="contain" style={styles.iconRefresh}
                                source={require('../assets/icons/icon-refresh.png')} />
                         <Text style={styles.randomText}>팀 랜덤선택</Text>
@@ -50,7 +80,7 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
 
                 <View style={styles.teamContainer}>
                     {TeamList.map((team, index) => (
-                        <TouchableOpacity onPress={() => handlerSelectTeam(index)}>
+                        <TouchableOpacity onPress={() => handlerSelectTeam(index)} key={index}>
                             <View
                                 style={[styles.teamWrapper,
                                     currentTeam === index && {
@@ -71,8 +101,10 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
                     ))}
                 </View>
 
-                <TouchableOpacity onPress={handlerStartGame}>
-                    <View style={styles.startWrapper}>
+                <TouchableOpacity
+                    onPress={handlerStartGame}>
+                    <View
+                        style={[styles.startWrapper, (currentTeam > -1 && !isSelectingRandomTeam) && styles.selectStartWrapper]}>
                         <Text style={styles.startText}>시작하기</Text>
                     </View>
                 </TouchableOpacity>
@@ -92,19 +124,19 @@ const styles = StyleSheet.create({
     subContainer: {
         flex: 1,
         alignItems: 'center',
-        marginTop: moderateScale(65, 2),
+        marginTop: heightScale(65),
     },
     randomWrapper: {
         flexDirection: 'row',
-        borderRadius: moderateScale(16),
+        borderRadius: heightScale(16),
         paddingVertical: heightScale(8),
-        paddingHorizontal: widthScale(16),
+        paddingHorizontal: heightScale(16),
         backgroundColor: '#727471',
         marginBottom: heightScale(50),
     },
     iconRefresh: {
-        width: moderateScale(40),
-        height: moderateScale(40),
+        width: heightScale(40),
+        height: heightScale(40),
     },
     selectRandomWrapper: {
         backgroundColor: '#FF0000',
@@ -112,16 +144,16 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowRadius: moderateScale(20),
-        elevation: 20,
+        shadowRadius: heightScale(20),
+        elevation: heightScale(20),
         shadowOpacity: 1,
         shadowColor: '#FF0000',
     },
     randomText: {
         color: '#FFFFFF',
-        fontSize: moderateScale(30),
+        fontSize: heightScale(30),
         fontWeight: 'bold',
-        marginLeft: widthScale(20),
+        marginLeft: heightScale(20),
     },
     teamContainer: {
         flexDirection: 'row',
@@ -133,9 +165,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#727471',
         justifyContent: 'center',
         alignItems: 'center',
-        marginHorizontal: widthScale(18),
-        borderRadius: moderateScale(24),
-        borderWidth: 3,
+        marginHorizontal: heightScale(18),
+        borderRadius: heightScale(24),
+        borderWidth: moderateScale(3),
         borderColor: '#FFFFFF',
         borderStyle: 'solid',
     },
@@ -144,16 +176,16 @@ const styles = StyleSheet.create({
             width: 0,
             height: 2,
         },
-        shadowRadius: moderateScale(20),
-        elevation: 20,
+        shadowRadius: heightScale(20),
+        elevation: heightScale(20),
         shadowOpacity: 1,
     },
     iconCheck: {
-        width: moderateScale(40),
-        height: moderateScale(40),
+        width: heightScale(40),
+        height: heightScale(40),
     },
     teamText: {
-        fontSize: moderateScale(40, 1),
+        fontSize: heightScale(40),
         marginTop: heightScale(10),
         textAlign: 'center',
         fontWeight: 'bold',
@@ -163,14 +195,17 @@ const styles = StyleSheet.create({
     startWrapper: {
         marginTop: heightScale(50),
         width: widthScale(926),
-        backgroundColor: '#FFFFFF',
-        borderRadius: moderateScale(16),
+        backgroundColor: '#434642',
+        borderRadius: heightScale(16),
         paddingVertical: heightScale(28),
+    },
+    selectStartWrapper: {
+        backgroundColor: '#FFFFFF',
     },
     startText: {
         textAlign: 'center',
         color: '#2C2F2B',
-        fontSize: moderateScale(40, 1),
+        fontSize: heightScale(40),
         fontWeight: 'bold',
     },
 });

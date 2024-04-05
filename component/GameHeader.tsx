@@ -1,18 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { ScreenProps } from '../types';
 import { Color } from '../assets/GlobalStyles';
 import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
-
+import ScoreReset from './modal/ScoreReset';
 
 interface IGameHeader {
     title: string,
     isBack: boolean,
-    isSetting: boolean,
+    isPlaySetting: boolean,
+    isTeamSetting: boolean,
+    isRefreshSetting: boolean,
     navigation: ScreenProps['navigation'];
 }
 
-export default function GameHeader({ navigation, title, isBack, isSetting }: IGameHeader) {
+export default function GameHeader({
+                                       navigation,
+                                       title,
+                                       isBack = false,
+                                       isPlaySetting = false,
+                                       isTeamSetting = false,
+                                       isRefreshSetting = false,
+                                   }: IGameHeader) {
+    const [resetModalVisible, setResetModalVisible] = useState(false);
     const handlerBack = () => {
         navigation.goBack();
     };
@@ -21,33 +31,69 @@ export default function GameHeader({ navigation, title, isBack, isSetting }: IGa
         console.log('handlerTeamSetting');
     };
 
+    const handlerPlaySetting = () => {
+        console.log('handlerPlaySetting');
+    };
+
+    const handlerScoreResetSetting = () => {
+        setResetModalVisible(true);
+    };
+
     return (
-        <View style={styles.headerContainer}>
-            {isBack && (
-                <TouchableOpacity onPress={handlerBack}>
-                    <View style={styles.settingWrap}>
-                        <View style={styles.iconWrap}>
-                            <Image style={styles.iconArrow} resizeMode="cover"
-                                   source={require('../assets/icons/icon-left-arrow.png')} />
+        <>
+            <View style={styles.headerContainer}>
+                {isBack && (
+                    <TouchableOpacity onPress={handlerBack}>
+                        <View style={styles.settingWrap}>
+                            <View style={styles.iconWrap}>
+                                <Image style={styles.iconArrow} resizeMode="cover"
+                                       source={require('../assets/icons/icon-left-arrow.png')} />
+                            </View>
                         </View>
-                    </View>
-                </TouchableOpacity>
-            )}
+                    </TouchableOpacity>
+                )}
 
-            <Text style={styles.mainText}>{title}</Text>
+                <Text style={styles.mainText}>{title}</Text>
 
-            {isSetting && (
-                <TouchableOpacity onPress={handlerTeamSetting}>
-                    <View style={styles.settingWrap}>
-                        <View style={styles.iconWrap}>
-                            <Image style={styles.iconSetting} resizeMode="cover"
-                                   source={require('../assets/icons/icon-setting.png')} />
+                {isPlaySetting && (
+                    <TouchableOpacity onPress={handlerPlaySetting}>
+                        <View style={styles.settingWrap}>
+                            <View style={styles.iconWrap}>
+                                <Image style={styles.iconSetting} resizeMode="cover"
+                                       source={require('../assets/icons/icon-setting.png')} />
+                            </View>
+                            <Text style={styles.settingText}>플레이 설정</Text>
                         </View>
-                        <Text style={styles.settingText}>팀 설정</Text>
-                    </View>
-                </TouchableOpacity>
-            )}
-        </View>
+                    </TouchableOpacity>
+                )}
+
+                {isTeamSetting && (
+                    <TouchableOpacity onPress={handlerTeamSetting}>
+                        <View style={styles.settingWrap}>
+                            <View style={styles.iconWrap}>
+                                <Image style={styles.iconSetting} resizeMode="cover"
+                                       source={require('../assets/icons/icon-team-setting.png')} />
+                            </View>
+                            <Text style={styles.settingText}>팀 설정</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
+
+                {isRefreshSetting && (
+                    <TouchableOpacity onPress={handlerScoreResetSetting}>
+                        <View style={styles.settingWrap}>
+                            <View style={styles.iconWrap}>
+                                <Image style={styles.iconSetting} resizeMode="cover"
+                                       source={require('../assets/icons/icon-refresh-setting.png')} />
+                            </View>
+                            <Text style={styles.settingText}>점수 초기화</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
+
+            </View>
+            <ScoreReset modalVisible={resetModalVisible} setModalVisible={setResetModalVisible} />
+        </>
     );
 }
 
@@ -66,7 +112,7 @@ const styles = StyleSheet.create({
         flex: 1,
         color: Color.mainText,
         textAlign: 'center',
-        fontSize: moderateScale(50, 1),
+        fontSize: heightScale(50),
         fontWeight: 'bold',
     },
     settingWrap: {
@@ -78,17 +124,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     iconArrow: {
-        width: moderateScale(48),
-        height: moderateScale(36),
+        width: heightScale(48),
+        height: heightScale(36),
     },
     iconSetting: {
-        width: moderateScale(40),
-        height: moderateScale(40),
+        width: heightScale(40),
+        height: heightScale(40),
     },
     settingText: {
         color: '#B9BAB9',
         fontWeight: '500',
-        fontSize: moderateScale(20),
-        marginTop: moderateScale(12),
+        fontSize: heightScale(20),
+        marginTop: heightScale(12),
     },
 });
