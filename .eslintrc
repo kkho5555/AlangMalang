@@ -1,0 +1,23 @@
+{
+    "root": true,
+    "env": {
+        "browser": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "@react-native-community",
+        "airbnb",
+        "airbnb/hooks",
+        "plugin:prettier/recommended",
+        "prettier/@typescript-eslint",
+        "prettier/react",
+        "eslint-config-prettier",
+        "prettier",
+        "eslint-plugin-simple-import-sort",
+        "eslint-plugin-unused-imports"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "project": ["./tsconfig.json"]
+    }
+}
