@@ -19,5 +19,13 @@
     "parserOptions": {
         "ecmaVersion": "latest",
         "project": ["./tsconfig.json"]
+    },
+    //// fix Unable to resolve path to module
+    "settings": {
+        "import/resolver": {
+            "node": {
+                "paths": ["src"]
+            }
+        }
     }
 }

@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import Entypo from '@expo/vector-icons/Entypo';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import MainNavigator from './navigators/MainNavigator';
 import { Provider } from 'react-redux';
+import MainNavigator from './navigators/MainNavigator';
 import store from './app/store';
 
 // Keep the splash screen visible while we fetch resources

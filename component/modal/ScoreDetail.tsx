@@ -19,15 +19,54 @@ interface IScoreResetProps {
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
-export default function ScoreDetail({ modalVisible, setModalVisible }: IScoreResetProps) {
+export default function ScoreDetail({
+    modalVisible,
+    setModalVisible,
+}: IScoreResetProps) {
     const teamName = '심연의 그린';
     const DetailScoreList = [
-        { gameTitle: '몸으로 말해요', subject: '동물', time: '60초', level: '쉬움', score: '8' },
-        { gameTitle: '몸으로 말해요', subject: '동물', time: '60초', level: '쉬움', score: '6' },
-        { gameTitle: '음악퀴즈', subject: '동물', time: '60초', level: '쉬움', score: '5' },
-        { gameTitle: '스피드퀴즈', subject: '동물', time: '60초', level: '쉬움', score: '4' },
-        { gameTitle: '몸으로 말해요', subject: '동물', time: '60초', level: '쉬움', score: '2' },
-        { gameTitle: '스피드퀴즈', subject: '동물', time: '60초', level: '쉬움', score: '0' },
+        {
+            gameTitle: '몸으로 말해요',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '8',
+        },
+        {
+            gameTitle: '몸으로 말해요',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '6',
+        },
+        {
+            gameTitle: '음악퀴즈',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '5',
+        },
+        {
+            gameTitle: '스피드퀴즈',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '4',
+        },
+        {
+            gameTitle: '몸으로 말해요',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '2',
+        },
+        {
+            gameTitle: '스피드퀴즈',
+            subject: '동물',
+            time: '60초',
+            level: '쉬움',
+            score: '0',
+        },
     ];
 
     const handlerBackground = (e: GestureResponderEvent) => {
@@ -39,66 +78,142 @@ export default function ScoreDetail({ modalVisible, setModalVisible }: IScoreRes
 
     return (
         <Modal
-            statusBarTranslucent={true}
+            statusBarTranslucent
             animationType="fade"
-            transparent={true}
+            transparent
             visible={modalVisible}
             onRequestClose={() => {
                 setModalVisible(!modalVisible);
-            }}>
-            <Pressable style={styles.centeredView} onPress={(e) => handlerBackground(e)}>
+            }}
+        >
+            <Pressable
+                style={styles.centeredView}
+                onPress={(e) => handlerBackground(e)}
+            >
                 <View>
                     <View style={styles.modalView}>
                         <Pressable
                             style={styles.closeButtonWrapper}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <Image resizeMode="cover" source={require('../../assets/icons/icon-close.png')} />
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Image
+                                resizeMode="cover"
+                                source={require('../../assets/icons/icon-close.png')}
+                            />
                         </Pressable>
 
                         <View style={styles.modalContent}>
                             <View>
-                                <Text style={styles.modalTitle}>{teamName}</Text>
+                                <Text style={styles.modalTitle}>
+                                    {teamName}
+                                </Text>
 
                                 <View style={styles.rankTableContainer}>
                                     <View style={styles.rankTableHeader}>
                                         <View style={{ flex: 40 }}>
                                             <Text
-                                                style={[styles.rankTableHeaderText, styles.rankTableGame]}>게임</Text>
+                                                style={[
+                                                    styles.rankTableHeaderText,
+                                                    styles.rankTableGame,
+                                                ]}
+                                            >
+                                                게임
+                                            </Text>
                                         </View>
                                         <View style={{ flex: 20 }}>
-                                            <Text style={styles.rankTableHeaderText}>주제</Text>
+                                            <Text
+                                                style={
+                                                    styles.rankTableHeaderText
+                                                }
+                                            >
+                                                주제
+                                            </Text>
                                         </View>
                                         <View style={{ flex: 15 }}>
-                                            <Text style={styles.rankTableHeaderText}>시간</Text>
+                                            <Text
+                                                style={
+                                                    styles.rankTableHeaderText
+                                                }
+                                            >
+                                                시간
+                                            </Text>
                                         </View>
                                         <View style={{ flex: 20 }}>
-                                            <Text style={styles.rankTableHeaderText}>난이도</Text>
+                                            <Text
+                                                style={
+                                                    styles.rankTableHeaderText
+                                                }
+                                            >
+                                                난이도
+                                            </Text>
                                         </View>
                                         <View style={{ flex: 15 }}>
-                                            <Text style={[styles.rankTableHeaderText, styles.rankTableScore]}>점수</Text>
+                                            <Text
+                                                style={[
+                                                    styles.rankTableHeaderText,
+                                                    styles.rankTableScore,
+                                                ]}
+                                            >
+                                                점수
+                                            </Text>
                                         </View>
                                     </View>
 
                                     <View>
                                         {DetailScoreList.map((item, index) => {
                                             return (
-                                                <View key={index} style={styles.rankTableContent}>
+                                                <View
+                                                    key={index}
+                                                    style={
+                                                        styles.rankTableContent
+                                                    }
+                                                >
                                                     <View style={{ flex: 40 }}>
                                                         <Text
-                                                            style={[styles.rankTableContentText, styles.rankTableGame]}>{item.gameTitle}</Text>
+                                                            style={[
+                                                                styles.rankTableContentText,
+                                                                styles.rankTableGame,
+                                                            ]}
+                                                        >
+                                                            {item.gameTitle}
+                                                        </Text>
                                                     </View>
                                                     <View style={{ flex: 20 }}>
-                                                        <Text style={styles.rankTableContentText}>{item.subject}</Text>
-                                                    </View>
-                                                    <View style={{ flex: 15 }}>
-                                                        <Text style={styles.rankTableContentText}>{item.time}</Text>
-                                                    </View>
-                                                    <View style={{ flex: 20 }}>
-                                                        <Text style={styles.rankTableContentText}>{item.level}</Text>
+                                                        <Text
+                                                            style={
+                                                                styles.rankTableContentText
+                                                            }
+                                                        >
+                                                            {item.subject}
+                                                        </Text>
                                                     </View>
                                                     <View style={{ flex: 15 }}>
                                                         <Text
-                                                            style={[styles.rankTableContentText, styles.rankTableScore]}>{item.score}</Text>
+                                                            style={
+                                                                styles.rankTableContentText
+                                                            }
+                                                        >
+                                                            {item.time}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ flex: 20 }}>
+                                                        <Text
+                                                            style={
+                                                                styles.rankTableContentText
+                                                            }
+                                                        >
+                                                            {item.level}
+                                                        </Text>
+                                                    </View>
+                                                    <View style={{ flex: 15 }}>
+                                                        <Text
+                                                            style={[
+                                                                styles.rankTableContentText,
+                                                                styles.rankTableScore,
+                                                            ]}
+                                                        >
+                                                            {item.score}
+                                                        </Text>
                                                     </View>
                                                 </View>
                                             );
@@ -179,7 +294,7 @@ const styles = StyleSheet.create({
     rankTableHeaderText: {
         fontSize: heightScale(20),
         letterSpacing: heightScale(-0.2),
-        color: "#d0d1d0",
+        color: '#d0d1d0',
         textAlign: 'center',
     },
     rankTableGame: {
@@ -202,7 +317,7 @@ const styles = StyleSheet.create({
     rankTableContentText: {
         fontSize: heightScale(20),
         letterSpacing: heightScale(-0.2),
-        color: "#d0d1d0",
+        color: '#d0d1d0',
         textAlign: 'center',
     },
     rankTableScore: {

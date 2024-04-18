@@ -1,79 +1,122 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Pressable } from 'react-native';
-import { ScreenProps } from '../types';
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    ScrollView,
+    Pressable
+} from 'react-native';
+import { GameSubjectType, ScreenProps } from '../types';
 import { Color, Padding } from '../assets/GlobalStyles';
-import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
+import { widthScale, heightScale } from '../utils/Scaling';
 import GameHeader from '../component/GameHeader';
+import { setGameData, setGameSubject } from '../features/game/gameSlice';
+import { useAppSelector, useAppDispatch } from '../app/hooks';
 
 export default function InGameScreen({ navigation }: ScreenProps) {
     const [currentSubject, setCurrentSubject] = React.useState(-1);
+    const currentGame = useAppSelector((state) => state.game.currentGame);
 
-    const SubjectData = [
-        {
-            subject: '동물',
-            imgPath: require('../assets/icons/subject/animal.png'),
-        },
-        {
-            subject: '식물',
-            imgPath: require('../assets/icons/subject/flower.png'),
-        },
-        {
-            subject: '연예인',
-            imgPath: require('../assets/icons/subject/start.png'),
-        },
-        {
-            subject: '음식',
-            imgPath: require('../assets/icons/subject/pizza.png'),
-        },
-        {
-            subject: '과일',
-            imgPath: require('../assets/icons/subject/apple.png'),
-        },
-        {
-            subject: '준비중...',
-            // imgPath: require("../assets/icons/subject/apple.png"),
-            // gameType: () => navigation.navigate("GameSelect"),
-        },
-    ];
+    const dispatch = useAppDispatch();
+    const gameData = useAppSelector((state) => state.game.gameData);
+
+    // FIXME: 백엔드 통신하면 수정될 부분
+    const subjects: { [key: string]: any } = {
+        animal: require('../assets/icons/subject/animal.png'),
+        sports: require('../assets/icons/subject/sports.png'),
+        emotion: require('../assets/icons/subject/emotion.png'),
+        korean_movie: require('../assets/icons/subject/korean_movie.png'),
+        foreign_movie: require('../assets/icons/subject/foreign_movie.png')
+    };
+
+    const SubjectData = gameData.map((game) => {
+        return {
+            name: game.name,
+            subject: game.subject,
+            imgPath: subjects[game.subject]
+        };
+    });
 
     const handlerSelectSubject = (index: number) => {
         setCurrentSubject(index);
-
+        dispatch(
+            setGameSubject({
+                game: currentGame,
+                subject: SubjectData[index].subject
+            })
+        );
+        dispatch(setGameData(gameData[index]));
         setTimeout(() => {
             navigation.navigate('PlayerSettings');
         }, 100);
     };
 
     return (
-        <View className="flex-1 items-center justify-center" style={styles.container}>
-            <GameHeader title={'주제선택'} navigation={navigation} isBack={true} isTeamSetting={false} isPlaySetting={true}
-                        isRefreshSetting={false} />
+        <View
+            className="flex-1 items-center justify-center"
+            style={styles.container}
+        >
+            <GameHeader
+                title="주제선택"
+                navigation={navigation}
+                isBack
+                isTeamSetting={false}
+                isPlaySetting
+                isRefreshSetting={false}
+            />
             <ScrollView>
                 <View style={styles.subContainer}>
-
                     {SubjectData.map((subject, index) => (
-                        <Pressable key={index}
-                                   onPress={() => subject.imgPath > 0 ? handlerSelectSubject(index) : ''}>
-                            {
-                                subject.imgPath > 0 ?
-                                    (
-                                        <View key={index}
-                                              style={[styles.subjectWrapper, currentSubject === index && styles.currentSubjectWrapper]}>
-                                            <Image style={styles.subjectIcon} resizeMode="cover"
-                                                   source={subject.imgPath} />
-                                            <Text style={styles.subjectText}>{subject.subject}</Text>
-                                        </View>
-                                    ) :
-                                    (
-                                        <View key={index}
-                                              style={[styles.subjectWrapper, styles.pendingSubjectWrapper]}>
-                                            <Image style={styles.subjectIcon} resizeMode="cover"
-                                                   source={subject.imgPath} />
-                                            <Text
-                                                style={[styles.subjectText, styles.pendingSubjectText]}>{subject.subject}</Text>
-                                        </View>
-                                    )
+                        <Pressable
+                            key={index}
+                            onPress={() =>
+                                subject.imgPath
+                                    ? handlerSelectSubject(index)
+                                    : ''
                             }
+                        >
+                            {subject.imgPath ? (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.subjectWrapper,
+                                        currentSubject === index &&
+                                            styles.currentSubjectWrapper
+                                    ]}
+                                >
+                                    <Image
+                                        style={styles.subjectIcon}
+                                        resizeMode="cover"
+                                        source={subject.imgPath}
+                                    />
+                                    <Text style={styles.subjectText}>
+                                        {subject.name}
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.subjectWrapper,
+                                        styles.pendingSubjectWrapper
+                                    ]}
+                                >
+                                    <Image
+                                        style={styles.subjectIcon}
+                                        resizeMode="cover"
+                                        source={subject.imgPath}
+                                    />
+                                    <Text
+                                        style={[
+                                            styles.subjectText,
+                                            styles.pendingSubjectText
+                                        ]}
+                                    >
+                                        {subject.name}
+                                    </Text>
+                                </View>
+                            )}
                         </Pressable>
                     ))}
                 </View>
@@ -88,14 +131,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: Color.background,
         paddingHorizontal: widthScale(30),
-        paddingTop: Padding.ContainerPaddingTop,
+        paddingTop: Padding.ContainerPaddingTop
     },
     subContainer: {
         flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        marginTop: heightScale(65),
+        marginTop: heightScale(65)
     },
     subjectWrapper: {
         height: heightScale(120),
@@ -110,36 +153,36 @@ const styles = StyleSheet.create({
         backgroundColor: '#434642',
         paddingHorizontal: heightScale(43),
         marginHorizontal: heightScale(20),
-        marginVertical: heightScale(10),
+        marginVertical: heightScale(10)
     },
     currentSubjectWrapper: {
         backgroundColor: '#13FF8E',
         shadowColor: '#13ff8e',
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 2
         },
         shadowRadius: heightScale(20),
         elevation: heightScale(20),
         shadowOpacity: 1,
         borderColor: '#b7ffdd',
-        borderWidth: 6,
+        borderWidth: 6
     },
     pendingSubjectWrapper: {
-        borderWidth: 0,
+        borderWidth: 0
     },
     subjectText: {
         fontWeight: '600',
         color: '#FFFFFF',
         fontSize: heightScale(40),
         letterSpacing: heightScale(-1),
-        marginLeft: heightScale(25),
+        marginLeft: heightScale(25)
     },
     pendingSubjectText: {
-        color: '#727471',
+        color: '#727471'
     },
     subjectIcon: {
         width: heightScale(63),
-        height: heightScale(52),
-    },
+        height: heightScale(52)
+    }
 });

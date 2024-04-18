@@ -1,15 +1,28 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from './navigators/MainNavigator';
+
 export type ScreenNavigationProp = StackNavigationProp<
     RootStackParamList,
     'Main',
     'GameSettings',
     'GameSelect',
     'InGame',
-    'EndGame'
+    'EndGame',
+    'PlayerSettings',
+    'SubjectSelect',
+    'OverallRanking'
 >;
 
+export type GameDataType = {
+    subject: string;
+    name: string;
+    data: Array<{
+        difficulty: string;
+        words: string[];
+    }>;
+};
 export type GameType = {
+    id: string;
     num: number;
     bgColor1: string;
     bgColor2: string;
@@ -31,15 +44,10 @@ export type GameSubjectType = {
 };
 export type GameOptionType = {
     game: GameType;
-    playTime: 30 | 60 | 90;
+    playTime: number;
     subject: GameSubjectType;
     difficulty: 'easy' | 'normal' | 'hard';
     passLimit: number;
-};
-export type TeamType = {
-    name: string;
-    gameRecords: Array<GameResultType>;
-    teamColor: string;
 };
 export type GameResultType = {
     game: GameType;
@@ -48,6 +56,15 @@ export type GameResultType = {
     score: number;
     playedAt: Date;
 };
+export type TeamType = {
+    id: string;
+    name: string;
+    teamColor: string;
+};
+export type RankType = Array<{
+    teamId: TeamType['id'];
+    results: GameResultType[];
+}>;
 
 export interface ScreenProps {
     navigation: ScreenNavigationProp;

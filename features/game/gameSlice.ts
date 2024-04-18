@@ -1,35 +1,33 @@
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { StateType } from '../../app/store.d';
+import { gameData } from '../../assets/data/game_data';
 import {
-    createAction,
-    createAsyncThunk,
-    createReducer,
-    createSlice,
-    PayloadAction,
-} from '@reduxjs/toolkit';
-import type { RootState } from '../../app/store';
-import { StateType, ActionType } from '../../app/store.d';
-import {
+    GameDataType,
     GameOptionType,
     GameResultType,
     GameSubjectType,
     GameType,
-    TeamType,
+    TeamType
 } from '../../types';
-import { GameData } from '../../assets/data/games';
+import { GameList } from '../../assets/data/games';
 
 const initialState: StateType = {
     gameList: [],
+    gameData: [],
+    rankData: [],
+    currentGameData: {} as GameDataType,
     currentGame: {} as GameType,
     currentGameSubject: {} as GameSubjectType,
-    currentGameOptionType: {} as GameOptionType,
-    currentTeamType: {} as TeamType,
-    currentGameResultType: {} as GameResultType,
+    currentGameOption: {} as GameOptionType,
+    currentTeam: {} as TeamType,
+    currentGameResult: {} as GameResultType
 };
 
-export const fetchGameData = createAsyncThunk(
+export const fetchGameData = createAsyncThunk<[GameType[], GameDataType[]]>(
     'game/fetchGameData',
     async () => {
-        return GameData;
-    },
+        return [GameList, gameData];
+    }
 );
 
 export const gameSlice = createSlice({
@@ -39,30 +37,46 @@ export const gameSlice = createSlice({
         setGame: (state, action: PayloadAction<GameType>) => {
             state.currentGame = action.payload;
         },
+        setGameData: (state, action: PayloadAction<GameDataType>) => {
+            state.currentGameData = action.payload;
+        },
+        pushGameResult: (
+            state,
+            action: PayloadAction<{ teamId: string; result: GameResultType }>
+        ) => {
+            const { teamId, result } = action.payload;
+            const team = state.rankData.find((team) => team.teamId === teamId);
+            if (team) {
+                team.results.push(result);
+            } else {
+                state.rankData.push({
+                    teamId,
+                    results: [result]
+                });
+            }
+        },
         setGameSubject: (state, action: PayloadAction<GameSubjectType>) => {
             state.currentGameSubject = action.payload;
         },
         setGameOption: (state, action: PayloadAction<GameOptionType>) => {
-            state.currentGameOptionType = action.payload;
-        },
-        setTeam: (state, action: PayloadAction<TeamType>) => {
-            state.currentTeamType = action.payload;
+            state.currentGameOption = action.payload;
         },
         setGameResult: (state, action: PayloadAction<GameResultType>) => {
-            state.currentGameResultType = action.payload;
-        },
+            state.currentGameResult = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchGameData.fulfilled, (state, action) => {
-            state.gameList = action.payload;
+            [state.gameList, state.gameData] = action.payload;
         });
-    },
+    }
 });
 
 export const {
     setGame,
+    setGameData,
+    pushGameResult,
     setGameSubject,
     setGameOption,
-    setTeam,
-    setGameResult,
+    setGameResult
 } = gameSlice.actions;

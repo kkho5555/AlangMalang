@@ -19,8 +19,10 @@ interface IScoreResetProps {
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
-export default function ScoreReset({ modalVisible, setModalVisible }: IScoreResetProps) {
-
+export default function ScoreReset({
+    modalVisible,
+    setModalVisible,
+}: IScoreResetProps) {
     const handlerBackground = (e: GestureResponderEvent) => {
         if (e.target !== e.currentTarget) {
             return;
@@ -31,44 +33,70 @@ export default function ScoreReset({ modalVisible, setModalVisible }: IScoreRese
     const handlerReset = () => {
         console.log('handlerReset');
         setModalVisible(!modalVisible);
-    }
+    };
 
     return (
         <Modal
-            statusBarTranslucent={true}
+            statusBarTranslucent
             animationType="fade"
-            transparent={true}
+            transparent
             visible={modalVisible}
             onRequestClose={() => {
                 setModalVisible(!modalVisible);
-            }}>
-            <Pressable style={styles.centeredView} onPress={(e) => handlerBackground(e)}>
+            }}
+        >
+            <Pressable
+                style={styles.centeredView}
+                onPress={(e) => handlerBackground(e)}
+            >
                 <View>
                     <View style={styles.modalView}>
                         <Pressable
                             style={styles.closeButtonWrapper}
-                            onPress={() => setModalVisible(!modalVisible)}>
-                            <Image resizeMode="cover" source={require('../../assets/icons/icon-close.png')} />
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Image
+                                resizeMode="cover"
+                                source={require('../../assets/icons/icon-close.png')}
+                            />
                         </Pressable>
 
                         <View style={styles.modalContent}>
                             <View>
-                                <Text style={styles.modalTitle}>점수 초기화</Text>
+                                <Text style={styles.modalTitle}>
+                                    점수 초기화
+                                </Text>
 
-                                <Text style={styles.modalContentText}>모든게임의 기록이 삭제됩니다.</Text>
-                                <Text style={styles.modalContentText}>점수 초기화 하시겠습니까?</Text>
+                                <Text style={styles.modalContentText}>
+                                    모든게임의 기록이 삭제됩니다.
+                                </Text>
+                                <Text style={styles.modalContentText}>
+                                    점수 초기화 하시겠습니까?
+                                </Text>
                             </View>
 
                             <View style={styles.buttonWrap}>
                                 <TouchableOpacity
-                                    style={[styles.modalButton, styles.buttonCancel]}
-                                    onPress={() => setModalVisible(!modalVisible)}>
+                                    style={[
+                                        styles.modalButton,
+                                        styles.buttonCancel,
+                                    ]}
+                                    onPress={() =>
+                                        setModalVisible(!modalVisible)
+                                    }
+                                >
                                     <Text style={styles.buttonText}>취소</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={[styles.modalButton, styles.buttonReset]}
-                                    onPress={handlerReset}>
-                                    <Text style={styles.buttonText}>초기화 하기</Text>
+                                    style={[
+                                        styles.modalButton,
+                                        styles.buttonReset,
+                                    ]}
+                                    onPress={handlerReset}
+                                >
+                                    <Text style={styles.buttonText}>
+                                        초기화 하기
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -151,12 +179,11 @@ const styles = StyleSheet.create({
     },
     buttonCancel: {
         flex: 1,
-        backgroundColor: "#109aff",
+        backgroundColor: '#109aff',
     },
     buttonReset: {
         flex: 2,
-        backgroundColor: "#727471",
-
+        backgroundColor: '#727471',
     },
     buttonText: {
         fontSize: heightScale(40),

@@ -1,22 +1,16 @@
 import React from 'react';
-import {
-    Text,
-    StyleSheet,
-    View,
-    Image,
-    Dimensions,
-    TouchableOpacity,
-} from 'react-native';
+import { Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { ScreenProps } from '../types';
 import GameCarousel from '../component/GameCarousel';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
 import GameHeader from '../component/GameHeader';
-import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
+import { heightScale } from '../utils/Scaling';
 
 export default function GameSelectScreen({ navigation }: ScreenProps) {
-    const gameList = useAppSelector((state) => state.gameList);
+    const gameList = useAppSelector((state) => state.game.gameList);
+
     const handlerTeamSetting = () => {
         console.log('handlerTeamSetting');
     };
@@ -26,17 +20,29 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
     };
 
     return (
-        <View className="flex-1 items-center justify-center" style={styles.container}>
-            <GameHeader title={'어떤 게임을 할까요?'} isBack={false} isTeamSetting={false} navigation={navigation} isPlaySetting={false} isRefreshSetting={false    } />
+        <View
+            className="flex-1 items-center justify-center"
+            style={styles.container}
+        >
+            <GameHeader
+                title="어떤 게임을 할까요?"
+                isBack={false}
+                isTeamSetting={false}
+                navigation={navigation}
+                isPlaySetting={false}
+                isRefreshSetting={false}
+            />
 
             <View style={styles.carouselWarp}>
                 <View style={styles.carouselOuter}>
-                    <GameCarousel GameData={gameList} navigation={navigation} />
+                    <GameCarousel GameList={gameList} navigation={navigation} />
                 </View>
             </View>
 
             <View style={styles.bottomContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('OverallRanking')}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('OverallRanking')}
+                >
                     <View style={styles.rankContainer}>
                         <Text style={styles.rankTitleText}>전체 랭킹</Text>
                         <Text style={[styles.rankTitleText, styles.divider]}>
@@ -127,22 +133,22 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: Color.background,
-        paddingTop: Padding.ContainerPaddingTop,
+        paddingTop: Padding.ContainerPaddingTop
     },
     mainText: {
         color: Color.mainText,
         textAlign: 'center',
         fontSize: heightScale(50),
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
     carouselOuter: {
         marginTop: heightScale(35),
         justifyContent: 'center',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     carouselWarp: {
-        alignItems: 'center',
+        alignItems: 'center'
     },
     bottomContainer: {
         marginTop: heightScale(40),
@@ -150,7 +156,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     rankContainer: {
         flexDirection: 'row',
@@ -159,19 +165,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: heightScale(20),
         paddingVertical: heightScale(15),
         backgroundColor: '#434642',
-        borderRadius: heightScale(8),
+        borderRadius: heightScale(8)
     },
     rankTitleText: {
         fontSize: heightScale(20),
         fontWeight: '600',
-        color: '#898B89',
+        color: '#898B89'
     },
     divider: {
-        marginHorizontal: heightScale(16),
+        marginHorizontal: heightScale(16)
     },
     rankWrap: {
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     rankOuter: {
         paddingHorizontal: heightScale(8),
@@ -179,17 +185,17 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 999,
+        borderRadius: 999
     },
     iconCrown: {
         width: heightScale(20),
-        height: heightScale(16),
+        height: heightScale(16)
     },
     crownRankTitle: {
         fontSize: heightScale(16),
         letterSpacing: heightScale(-0.2),
-        fontWeight: "500",
-        marginLeft: heightScale(8),
+        fontWeight: '500',
+        marginLeft: heightScale(8)
     },
     rankText: {
         marginLeft: heightScale(8),
@@ -197,36 +203,36 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: heightScale(20),
         color: '#FFFFFF',
-        letterSpacing: heightScale(-1),
+        letterSpacing: heightScale(-1)
     },
     settingContainer: {
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     settingWrap: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     gameSettingWrap: {
-        marginLeft: heightScale(27),
+        marginLeft: heightScale(27)
     },
     iconWrap: {
         width: heightScale(38),
         height: heightScale(36),
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     iconPeople: {
         width: heightScale(38),
-        height: heightScale(26),
+        height: heightScale(26)
     },
     iconSetting: {
         width: heightScale(34),
-        height: heightScale(36),
+        height: heightScale(36)
     },
     settingText: {
         color: '#B9BAB9',
         fontWeight: '500',
         fontSize: heightScale(20),
-        marginTop: heightScale(8),
-    },
+        marginTop: heightScale(8)
+    }
 });

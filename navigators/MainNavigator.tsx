@@ -1,4 +1,3 @@
-// create main navigator
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,7 +11,6 @@ import PlayerSettingsScreen from '../screens/PlayerSettingsScreen';
 import OverallRankingScreen from '../screens/OverallRankingScreen';
 
 const Stack = createNativeStackNavigator();
-//RootStackParamList
 export type RootStackParamList = {
     Main: undefined;
     GameSettings: undefined;
@@ -21,6 +19,7 @@ export type RootStackParamList = {
     InGame: undefined;
     EndGame: undefined;
     OverallRankingScreen: undefined;
+    PlayerSettings: undefined;
 };
 
 export default function MainNavigator(prop: { onLayout: () => void }) {
@@ -29,7 +28,7 @@ export default function MainNavigator(prop: { onLayout: () => void }) {
         <NavigationContainer>
             <Stack.Navigator
                 initialRouteName="Main"
-                screenOptions={{ headerShown: false, statusBarHidden: true }}
+                screenOptions={{ headerShown: false }}
             >
                 <Stack.Screen name="Main" component={MainScreen} />
                 <Stack.Screen
@@ -47,8 +46,10 @@ export default function MainNavigator(prop: { onLayout: () => void }) {
                 />
                 <Stack.Screen name="InGame" component={InGameScreen} />
                 <Stack.Screen name="EndGame" component={EndGameScreen} />
-                <Stack.Screen name="OverallRanking" component={OverallRankingScreen} />
-
+                <Stack.Screen
+                    name="OverallRanking"
+                    component={OverallRankingScreen}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

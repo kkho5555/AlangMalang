@@ -6,22 +6,22 @@ import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 import ScoreReset from './modal/ScoreReset';
 
 interface IGameHeader {
-    title: string,
-    isBack: boolean,
-    isPlaySetting: boolean,
-    isTeamSetting: boolean,
-    isRefreshSetting: boolean,
+    title: string;
+    isBack: boolean;
+    isPlaySetting: boolean;
+    isTeamSetting: boolean;
+    isRefreshSetting: boolean;
     navigation: ScreenProps['navigation'];
 }
 
 export default function GameHeader({
-                                       navigation,
-                                       title,
-                                       isBack = false,
-                                       isPlaySetting = false,
-                                       isTeamSetting = false,
-                                       isRefreshSetting = false,
-                                   }: IGameHeader) {
+    navigation,
+    title,
+    isBack = false,
+    isPlaySetting = false,
+    isTeamSetting = false,
+    isRefreshSetting = false,
+}: IGameHeader) {
     const [resetModalVisible, setResetModalVisible] = useState(false);
     const handlerBack = () => {
         navigation.goBack();
@@ -46,8 +46,11 @@ export default function GameHeader({
                     <TouchableOpacity onPress={handlerBack}>
                         <View style={styles.settingWrap}>
                             <View style={styles.iconWrap}>
-                                <Image style={styles.iconArrow} resizeMode="cover"
-                                       source={require('../assets/icons/icon-left-arrow.png')} />
+                                <Image
+                                    style={styles.iconArrow}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-left-arrow.png')}
+                                />
                             </View>
                         </View>
                     </TouchableOpacity>
@@ -59,8 +62,11 @@ export default function GameHeader({
                     <TouchableOpacity onPress={handlerPlaySetting}>
                         <View style={styles.settingWrap}>
                             <View style={styles.iconWrap}>
-                                <Image style={styles.iconSetting} resizeMode="cover"
-                                       source={require('../assets/icons/icon-setting.png')} />
+                                <Image
+                                    style={styles.iconSetting}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-setting.png')}
+                                />
                             </View>
                             <Text style={styles.settingText}>플레이 설정</Text>
                         </View>
@@ -71,8 +77,11 @@ export default function GameHeader({
                     <TouchableOpacity onPress={handlerTeamSetting}>
                         <View style={styles.settingWrap}>
                             <View style={styles.iconWrap}>
-                                <Image style={styles.iconSetting} resizeMode="cover"
-                                       source={require('../assets/icons/icon-team-setting.png')} />
+                                <Image
+                                    style={styles.iconSetting}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-team-setting.png')}
+                                />
                             </View>
                             <Text style={styles.settingText}>팀 설정</Text>
                         </View>
@@ -83,16 +92,21 @@ export default function GameHeader({
                     <TouchableOpacity onPress={handlerScoreResetSetting}>
                         <View style={styles.settingWrap}>
                             <View style={styles.iconWrap}>
-                                <Image style={styles.iconSetting} resizeMode="cover"
-                                       source={require('../assets/icons/icon-refresh-setting.png')} />
+                                <Image
+                                    style={styles.iconSetting}
+                                    resizeMode="cover"
+                                    source={require('../assets/icons/icon-refresh-setting.png')}
+                                />
                             </View>
                             <Text style={styles.settingText}>점수 초기화</Text>
                         </View>
                     </TouchableOpacity>
                 )}
-
             </View>
-            <ScoreReset modalVisible={resetModalVisible} setModalVisible={setResetModalVisible} />
+            <ScoreReset
+                modalVisible={resetModalVisible}
+                setModalVisible={setResetModalVisible}
+            />
         </>
     );
 }
