@@ -7,124 +7,130 @@ import { useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
 import GameHeader from '../component/GameHeader';
 import { heightScale } from '../utils/Scaling';
+import GameSettings from '../component/modal/GameSettings';
+import PlayerSettings from '../component/modal/PlayerSettings';
 
 export default function GameSelectScreen({ navigation }: ScreenProps) {
     const gameList = useAppSelector((state) => state.game.gameList);
+    const [gameSettingModalVisible, setGameSettingModalVisible] = React.useState(false);
+    const [playerSettingModalVisible, setPlayerSettingModalVisible] = React.useState(false);
 
     const handlerTeamSetting = () => {
-        console.log('handlerTeamSetting');
+        setPlayerSettingModalVisible(true);
     };
 
     const handlerGameSetting = () => {
-        console.log('handlerGameSetting');
+        setGameSettingModalVisible(true);
     };
 
     return (
-        <View
-            className="flex-1 items-center justify-center"
-            style={styles.container}
-        >
-            <GameHeader
-                title="어떤 게임을 할까요?"
-                isBack={false}
-                isTeamSetting={false}
-                navigation={navigation}
-                isPlaySetting={false}
-                isRefreshSetting={false}
-            />
+        <>
+            <View
+                className="flex-1 items-center justify-center"
+                style={styles.container}
+            >
+                <GameHeader
+                    title="어떤 게임을 할까요?"
+                    isBack={false}
+                    isTeamSetting={false}
+                    navigation={navigation}
+                    isPlaySetting={false}
+                    isRefreshSetting={false}
+                />
 
-            <View style={styles.carouselWarp}>
-                <View style={styles.carouselOuter}>
-                    <GameCarousel GameList={gameList} navigation={navigation} />
-                </View>
-            </View>
-
-            <View style={styles.bottomContainer}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('OverallRanking')}
-                >
-                    <View style={styles.rankContainer}>
-                        <Text style={styles.rankTitleText}>전체 랭킹</Text>
-                        <Text style={[styles.rankTitleText, styles.divider]}>
-                            |
-                        </Text>
-                        <View style={styles.rankWrap}>
-                            <LinearGradient
-                                style={styles.rankOuter}
-                                colors={['#ffa235', '#fff3b2']}
-                            >
-                                <Image
-                                    style={styles.iconCrown}
-                                    resizeMode="cover"
-                                    source={require('../assets/icons/icon-crown.png')}
-                                />
-                                <Text style={styles.crownRankTitle}>1st</Text>
-                            </LinearGradient>
-                            <Text style={styles.rankText}>심연의 그린</Text>
-                        </View>
-                        <View style={styles.rankWrap}>
-                            <LinearGradient
-                                style={styles.rankOuter}
-                                colors={['#D0D1D0', '#D0D1D0']}
-                            >
-                                <Image
-                                    style={styles.iconCrown}
-                                    resizeMode="cover"
-                                    source={require('../assets/icons/icon-crown.png')}
-                                />
-                                <Text style={styles.crownRankTitle}>2nd</Text>
-                            </LinearGradient>
-                            <Text style={styles.rankText}>우아한 코랄</Text>
-                        </View>
-                        <View style={styles.rankWrap}>
-                            <LinearGradient
-                                style={styles.rankOuter}
-                                colors={['#D0D1D0', '#D0D1D0']}
-                            >
-                                <Image
-                                    style={styles.iconCrown}
-                                    resizeMode="cover"
-                                    source={require('../assets/icons/icon-crown.png')}
-                                />
-                                <Text style={styles.crownRankTitle}>3rd</Text>
-                            </LinearGradient>
-                            <Text style={styles.rankText}>진중한 블루</Text>
-                        </View>
+                <View style={styles.carouselWarp}>
+                    <View style={styles.carouselOuter}>
+                        <GameCarousel GameList={gameList} navigation={navigation} />
                     </View>
-                </TouchableOpacity>
-                <View style={styles.settingContainer}>
-                    <TouchableOpacity onPress={handlerTeamSetting}>
-                        <View style={styles.settingWrap}>
-                            <View style={styles.iconWrap}>
-                                <Image
-                                    style={styles.iconPeople}
-                                    resizeMode="contain"
-                                    source={require('../assets/icons/icon-people.png')}
-                                />
-                            </View>
-                            <Text style={styles.settingText}>팀 설정</Text>
-                        </View>
-                    </TouchableOpacity>
+                </View>
 
+                <View style={styles.bottomContainer}>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('GameSettings')}
+                        onPress={() => navigation.navigate('OverallRanking')}
                     >
-                        <View
-                            style={[styles.settingWrap, styles.gameSettingWrap]}
-                        >
-                            <View style={styles.iconWrap}>
-                                <Image
-                                    style={styles.iconSetting}
-                                    resizeMode="contain"
-                                    source={require('../assets/icons/icon-setting.png')}
-                                />
+                        <View style={styles.rankContainer}>
+                            <Text style={styles.rankTitleText}>전체 랭킹</Text>
+                            <Text style={[styles.rankTitleText, styles.divider]}>
+                                |
+                            </Text>
+                            <View style={styles.rankWrap}>
+                                <LinearGradient
+                                    style={styles.rankOuter}
+                                    colors={['#ffa235', '#fff3b2']}
+                                >
+                                    <Image
+                                        style={styles.iconCrown}
+                                        resizeMode="cover"
+                                        source={require('../assets/icons/icon-crown.png')}
+                                    />
+                                    <Text style={styles.crownRankTitle}>1st</Text>
+                                </LinearGradient>
+                                <Text style={styles.rankText}>심연의 그린</Text>
                             </View>
-                            <Text style={styles.settingText}>게임 설정</Text>
+                            <View style={styles.rankWrap}>
+                                <LinearGradient
+                                    style={styles.rankOuter}
+                                    colors={['#D0D1D0', '#D0D1D0']}
+                                >
+                                    <Image
+                                        style={styles.iconCrown}
+                                        resizeMode="cover"
+                                        source={require('../assets/icons/icon-crown.png')}
+                                    />
+                                    <Text style={styles.crownRankTitle}>2nd</Text>
+                                </LinearGradient>
+                                <Text style={styles.rankText}>우아한 코랄</Text>
+                            </View>
+                            <View style={styles.rankWrap}>
+                                <LinearGradient
+                                    style={styles.rankOuter}
+                                    colors={['#D0D1D0', '#D0D1D0']}
+                                >
+                                    <Image
+                                        style={styles.iconCrown}
+                                        resizeMode="cover"
+                                        source={require('../assets/icons/icon-crown.png')}
+                                    />
+                                    <Text style={styles.crownRankTitle}>3rd</Text>
+                                </LinearGradient>
+                                <Text style={styles.rankText}>진중한 블루</Text>
+                            </View>
                         </View>
                     </TouchableOpacity>
+                    <View style={styles.settingContainer}>
+                        <TouchableOpacity onPress={handlerTeamSetting}>
+                            <View style={styles.settingWrap}>
+                                <View style={styles.iconWrap}>
+                                    <Image
+                                        style={styles.iconPeople}
+                                        resizeMode="contain"
+                                        source={require('../assets/icons/icon-people.png')}
+                                    />
+                                </View>
+                                <Text style={styles.settingText}>팀 설정</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={handlerGameSetting}>
+                            <View
+                                style={[styles.settingWrap, styles.gameSettingWrap]}
+                            >
+                                <View style={styles.iconWrap}>
+                                    <Image
+                                        style={styles.iconSetting}
+                                        resizeMode="contain"
+                                        source={require('../assets/icons/icon-setting.png')}
+                                    />
+                                </View>
+                                <Text style={styles.settingText}>게임 설정</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-        </View>
+            <GameSettings modalVisible={gameSettingModalVisible} setModalVisible={setGameSettingModalVisible} />
+            <PlayerSettings modalVisible={playerSettingModalVisible} setModalVisible={setPlayerSettingModalVisible} />
+        </>
     );
 }
 

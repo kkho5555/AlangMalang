@@ -44,7 +44,7 @@ export default function GameCard({ item, navigation, isActive }: IPage) {
                                 source={require('../assets/icons/icon-repeat.png')}
                             />
                             <Text style={[styles.touchText, styles.textTypo]}>
-                                {isDefault ? '게임하기' : '설명보기'}
+                                {isDefault ? '설명보기' : '게임하기'}
                             </Text>
                         </View>
                     </TouchableOpacity>

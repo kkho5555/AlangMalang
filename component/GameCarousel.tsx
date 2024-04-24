@@ -77,7 +77,6 @@ export default function GameCarousel({
                     />
                 )}
             />
-            <Text className="text-white">{currentGame}</Text>
             <View style={styles.indicatorWrapper}>
                 {GameData.map((item, index) => (
                     <View

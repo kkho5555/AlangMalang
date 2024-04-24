@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: heightScale(18),
         borderRadius: heightScale(24),
-        borderWidth: moderateScale(3),
+        borderWidth: heightScale(3),
         borderColor: '#FFFFFF',
         borderStyle: 'solid'
     },
