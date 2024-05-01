@@ -27,14 +27,14 @@ export default function GameCard({ item, navigation, isActive }: IPage) {
             style={styles.frameContainer}
             colors={[item.bgColor1, item.bgColor2]}
         >
+            {isDefault ? (
+                <Image
+                    style={styles.bgImage}
+                    resizeMode="cover"
+                    source={item.imgPath}
+                />
+            ) : null}
             <View>
-                {isDefault ? (
-                    <Image
-                        style={styles.bgImage}
-                        resizeMode="contain"
-                        source={item.imgPath}
-                    />
-                ) : null}
                 {isActive ? (
                     <TouchableOpacity onPress={handlePress}>
                         <View style={styles.contentsWrap}>
@@ -84,7 +84,7 @@ export default function GameCard({ item, navigation, isActive }: IPage) {
                         <Text style={styles.descText}>
                             출제자 : {item.gameManual.tester}
                         </Text>
-                        <Text style={[styles.descText, { marginTop: 30 }]}>
+                        <Text style={[styles.descText, { marginTop: heightScale(30) }]}>
                             참여자 : {item.gameManual.participant}
                         </Text>
                     </View>
@@ -106,87 +106,88 @@ const styles = StyleSheet.create({
     },
     textTypo: {
         fontWeight: '600',
-        fontSize: heightScale(20),
+        fontSize: heightScale(20)
     },
     contentsWrap: {
         justifyContent: 'flex-end',
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     iconRepeat: {
         width: heightScale(32),
         height: heightScale(32),
-        overflow: 'hidden',
+        overflow: 'hidden'
     },
     touchText: {
         marginLeft: heightScale(14),
         letterSpacing: heightScale(-0.2),
         textAlign: 'left',
-        color: '#FFFFFF',
+        color: '#FFFFFF'
     },
     contentTitleContainer: {
         marginTop: heightScale(24),
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
     contentTitle: {
         fontSize: heightScale(48),
         letterSpacing: heightScale(-0.5),
         fontWeight: '700',
-        color: '#FFFFFF',
+        color: '#FFFFFF'
     },
     teamIconContainer: {
         marginTop: heightScale(12),
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     teamIconWrap: {
         padding: 5,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     teamIcon: {
         width: heightScale(34),
-        height: heightScale(24),
+        height: heightScale(24)
     },
     teamText: {
         fontSize: heightScale(20),
         letterSpacing: heightScale(-0.2),
         fontWeight: '600',
         marginLeft: heightScale(10),
-        color: '#FFFFFF',
+        color: '#FFFFFF'
     },
     descContainer: {
-        marginTop: heightScale(35),
+        marginTop: heightScale(35)
     },
     descText: {
         fontSize: heightScale(24),
-        width: heightScale(252),
+        width: widthScale(252),
         fontWeight: '500',
         letterSpacing: heightScale(-0.2),
         textAlign: 'left',
-        color: '#FFFFFF',
+        color: '#FFFFFF'
     },
     bgImage: {
-        width: heightScale(360),
+        width: widthScale(360),
         height: heightScale(473),
-        left: heightScale(-41),
+        top: 0,
+        left: 0,
         position: 'absolute',
     },
     buttonContainer: {
         width: '100%',
         alignItems: 'center',
-        bottom: heightScale(-170),
+        bottom: heightScale(-170)
     },
     button: {
-        width: heightScale(300),
+        width: widthScale(300),
         height: heightScale(80),
         justifyContent: 'center',
         backgroundColor: 'rgba(20, 23, 19, 0.6)',
-        borderRadius: heightScale(8),
+        borderRadius: heightScale(8)
     },
     buttonText: {
         color: '#ffffff',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: heightScale(25),
-    },
+        fontSize: heightScale(25)
+    }
 });

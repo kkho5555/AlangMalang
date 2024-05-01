@@ -364,8 +364,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     iconRank: {
-        width: widthScale(24),
-        height: widthScale(24)
+        width: heightScale(24),
+        height: heightScale(24)
     },
     rankText: {
         fontSize: heightScale(40),

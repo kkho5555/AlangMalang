@@ -94,8 +94,10 @@ export default function ScoreReset({
                             style={styles.closeButtonWrapper}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Image resizeMode="cover"
-                                   source={require('../../assets/icons/icon-close.png')}
+                            <Image
+                                style={styles.closeIcon}
+                                resizeMode="cover"
+                                source={require('../../assets/icons/icon-close.png')}
                             />
                         </Pressable>
 
@@ -214,10 +216,14 @@ const styles = StyleSheet.create({
         closeButtonWrapper: {
             top: heightScale(35),
             right: heightScale(45),
-            width: moderateScale(48),
-            height: moderateScale(48),
+            width: widthScale(48),
+            height: heightScale(48),
             overflow: 'hidden',
             position: 'absolute'
+        },
+        closeIcon: {
+            width: heightScale(48),
+            height: heightScale(48)
         },
         modalContent: {
             flex: 1,

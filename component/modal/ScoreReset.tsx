@@ -10,7 +10,7 @@ import {
     Dimensions,
     GestureResponderEvent,
 } from 'react-native';
-import { heightScale, moderateScale } from '../../utils/Scaling';
+import { heightScale, moderateScale, widthScale } from '../../utils/Scaling';
 
 interface IScoreResetProps {
     modalVisible: boolean;
@@ -56,6 +56,7 @@ export default function ScoreReset({
                             onPress={() => setModalVisible(!modalVisible)}
                         >
                             <Image
+                                style={styles.closeIcon}
                                 resizeMode="cover"
                                 source={require('../../assets/icons/icon-close.png')}
                             />
@@ -138,10 +139,14 @@ const styles = StyleSheet.create({
     closeButtonWrapper: {
         top: heightScale(35),
         right: heightScale(45),
-        width: moderateScale(48),
-        height: moderateScale(48),
+        width: widthScale(48),
+        height: heightScale(48),
         overflow: 'hidden',
         position: 'absolute',
+    },
+    closeIcon: {
+        width: heightScale(48),
+        height: heightScale(48)
     },
     modalContent: {
         flex: 1,

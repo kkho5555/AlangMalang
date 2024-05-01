@@ -8,7 +8,7 @@ import {
     Modal,
     Pressable,
     Dimensions,
-    GestureResponderEvent,
+    GestureResponderEvent
 } from 'react-native';
 import { heightScale, moderateScale, widthScale } from '../../utils/Scaling';
 
@@ -20,9 +20,9 @@ interface IScoreResetProps {
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 export default function ScoreDetail({
-    modalVisible,
-    setModalVisible,
-}: IScoreResetProps) {
+                                        modalVisible,
+                                        setModalVisible
+                                    }: IScoreResetProps) {
     const teamName = '심연의 그린';
     const DetailScoreList = [
         {
@@ -30,43 +30,43 @@ export default function ScoreDetail({
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '8',
+            score: '8'
         },
         {
             gameTitle: '몸으로 말해요',
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '6',
+            score: '6'
         },
         {
             gameTitle: '음악퀴즈',
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '5',
+            score: '5'
         },
         {
             gameTitle: '스피드퀴즈',
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '4',
+            score: '4'
         },
         {
             gameTitle: '몸으로 말해요',
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '2',
+            score: '2'
         },
         {
             gameTitle: '스피드퀴즈',
             subject: '동물',
             time: '60초',
             level: '쉬움',
-            score: '0',
-        },
+            score: '0'
+        }
     ];
 
     const handlerBackground = (e: GestureResponderEvent) => {
@@ -97,6 +97,7 @@ export default function ScoreDetail({
                             onPress={() => setModalVisible(!modalVisible)}
                         >
                             <Image
+                                style={styles.closeIcon}
                                 resizeMode="cover"
                                 source={require('../../assets/icons/icon-close.png')}
                             />
@@ -114,7 +115,7 @@ export default function ScoreDetail({
                                             <Text
                                                 style={[
                                                     styles.rankTableHeaderText,
-                                                    styles.rankTableGame,
+                                                    styles.rankTableGame
                                                 ]}
                                             >
                                                 게임
@@ -151,7 +152,7 @@ export default function ScoreDetail({
                                             <Text
                                                 style={[
                                                     styles.rankTableHeaderText,
-                                                    styles.rankTableScore,
+                                                    styles.rankTableScore
                                                 ]}
                                             >
                                                 점수
@@ -172,7 +173,7 @@ export default function ScoreDetail({
                                                         <Text
                                                             style={[
                                                                 styles.rankTableContentText,
-                                                                styles.rankTableGame,
+                                                                styles.rankTableGame
                                                             ]}
                                                         >
                                                             {item.gameTitle}
@@ -209,7 +210,7 @@ export default function ScoreDetail({
                                                         <Text
                                                             style={[
                                                                 styles.rankTableContentText,
-                                                                styles.rankTableScore,
+                                                                styles.rankTableScore
                                                             ]}
                                                         >
                                                             {item.score}
@@ -234,14 +235,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(67, 70, 66, 0.8)',
+        backgroundColor: 'rgba(67, 70, 66, 0.8)'
     },
     modalView: {
         backgroundColor: 'rgba(20, 23, 19, 0.9)',
         shadowColor: 'rgba(0, 0, 0, 0.8)',
         shadowOffset: {
             width: 0,
-            height: 4,
+            height: 4
         },
         shadowRadius: heightScale(20),
         elevation: heightScale(20),
@@ -255,30 +256,34 @@ const styles = StyleSheet.create({
         borderRadius: heightScale(16),
         paddingHorizontal: heightScale(40),
         paddingTop: heightScale(110),
-        paddingBottom: heightScale(50),
+        paddingBottom: heightScale(50)
     },
     closeButtonWrapper: {
         top: heightScale(35),
         right: heightScale(45),
-        width: moderateScale(48),
-        height: moderateScale(48),
+        width: widthScale(48),
+        height: heightScale(48),
         overflow: 'hidden',
-        position: 'absolute',
+        position: 'absolute'
+    },
+    closeIcon: {
+        width: heightScale(48),
+        height: heightScale(48)
     },
     modalContent: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-between',
+        justifyContent: 'space-between'
     },
     modalTitle: {
         fontSize: heightScale(48),
         letterSpacing: heightScale(-0.5),
         color: '#f3f3f3',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     rankTableContainer: {
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     rankTableHeader: {
         width: widthScale(575),
@@ -289,19 +294,19 @@ const styles = StyleSheet.create({
         paddingVertical: heightScale(16),
         paddingHorizontal: widthScale(18),
         borderBottomWidth: 0.5,
-        borderBottomColor: '#d0d1d0',
+        borderBottomColor: '#d0d1d0'
     },
     rankTableHeaderText: {
         fontSize: heightScale(20),
         letterSpacing: heightScale(-0.2),
         color: '#d0d1d0',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     rankTableGame: {
         fontSize: heightScale(24),
         letterSpacing: heightScale(-0.2),
         fontWeight: '700',
-        textAlign: 'left',
+        textAlign: 'left'
     },
     rankTableContent: {
         width: widthScale(575),
@@ -312,17 +317,17 @@ const styles = StyleSheet.create({
         paddingVertical: heightScale(16),
         paddingHorizontal: widthScale(18),
         borderBottomWidth: 0.5,
-        borderBottomColor: '#d0d1d0',
+        borderBottomColor: '#d0d1d0'
     },
     rankTableContentText: {
         fontSize: heightScale(20),
         letterSpacing: heightScale(-0.2),
         color: '#d0d1d0',
-        textAlign: 'center',
+        textAlign: 'center'
     },
     rankTableScore: {
         fontSize: heightScale(24),
         letterSpacing: heightScale(-0.2),
-        fontWeight: '700',
-    },
+        fontWeight: '700'
+    }
 });

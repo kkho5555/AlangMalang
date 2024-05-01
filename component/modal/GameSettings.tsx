@@ -11,7 +11,7 @@ import {
     Dimensions,
     GestureResponderEvent
 } from 'react-native';
-import { heightScale, moderateScale } from '../../utils/Scaling';
+import { heightScale, moderateScale, widthScale } from '../../utils/Scaling';
 
 interface IScoreResetProps {
     modalVisible: boolean;
@@ -68,8 +68,10 @@ export default function ScoreReset({
                             style={styles.closeButtonWrapper}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Image resizeMode="cover"
-                                   source={require('../../assets/icons/icon-close.png')}
+                            <Image
+                                style={styles.closeIcon}
+                                resizeMode="cover"
+                                source={require('../../assets/icons/icon-close.png')}
                             />
                         </Pressable>
 
@@ -91,6 +93,7 @@ export default function ScoreReset({
                                 <View style={styles.controlTextWrapper}>
                                     <Text style={styles.controlText}>{isEnabledBgm ? 'ON' : 'OFF'}</Text>
                                     <Switch
+                                        style={{ transform: [{ scaleX: heightScale(1) }, { scaleY: heightScale(1) }] }}
                                         trackColor={{ false: '#938f99', true: '#13ff8e' }}
                                         thumbColor={isEnabledBgm ? '#ffffff' : '#49454f'}
                                         ios_backgroundColor="#938f99"
@@ -111,6 +114,7 @@ export default function ScoreReset({
                                 <View style={styles.controlTextWrapper}>
                                     <Text style={styles.controlText}>{isEnabledEffect ? 'ON' : 'OFF'}</Text>
                                     <Switch
+                                        style={{ transform: [{ scaleX: heightScale(1) }, { scaleY: heightScale(1) }] }}
                                         trackColor={{ false: '#938f99', true: '#13ff8e' }}
                                         thumbColor={isEnabledEffect ? '#ffffff' : '#49454f'}
                                         ios_backgroundColor="#938f99"
@@ -208,10 +212,14 @@ const styles = StyleSheet.create({
     closeButtonWrapper: {
         top: heightScale(35),
         right: heightScale(45),
-        width: moderateScale(48),
-        height: moderateScale(48),
+        width: widthScale(48),
+        height: heightScale(48),
         overflow: 'hidden',
         position: 'absolute'
+    },
+    closeIcon: {
+        width: heightScale(48),
+        height: heightScale(48)
     },
     modalContent: {
         flex: 1,
@@ -228,7 +236,7 @@ const styles = StyleSheet.create({
     settingView: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: heightScale(80)
+        marginBottom: heightScale(40)
     },
     settingTextWrapper: {
         flexDirection: 'row',

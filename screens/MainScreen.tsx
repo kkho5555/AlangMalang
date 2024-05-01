@@ -57,6 +57,7 @@ export default function MainScreen({ navigation }: ScreenProps) {
             {/*    <Text style={styles.buttonText}>눌러서 시작하기</Text> */}
             {/* </TouchableOpacity> */}
             <Progress.Bar
+                animationType={'timing'}
                 progress={loading}
                 width={heightScale(855)}
                 height={15}

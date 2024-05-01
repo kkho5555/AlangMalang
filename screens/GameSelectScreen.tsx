@@ -6,7 +6,7 @@ import GameCarousel from '../component/GameCarousel';
 import { useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
 import GameHeader from '../component/GameHeader';
-import { heightScale } from '../utils/Scaling';
+import { heightScale, widthScale } from '../utils/Scaling';
 import GameSettings from '../component/modal/GameSettings';
 import PlayerSettings from '../component/modal/PlayerSettings';
 
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     },
     bottomContainer: {
         marginTop: heightScale(40),
-        paddingHorizontal: heightScale(40),
+        paddingHorizontal: widthScale(40),
         width: '100%',
         justifyContent: 'space-between',
         flexDirection: 'row',
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: heightScale(20),
+        paddingHorizontal: widthScale(20),
         paddingVertical: heightScale(15),
         backgroundColor: '#434642',
         borderRadius: heightScale(8)

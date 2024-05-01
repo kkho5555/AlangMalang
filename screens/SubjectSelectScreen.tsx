@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
         elevation: heightScale(20),
         shadowOpacity: 1,
         borderColor: '#b7ffdd',
-        borderWidth: 6
+        borderWidth: heightScale(6)
     },
     pendingSubjectWrapper: {
         borderWidth: 0
