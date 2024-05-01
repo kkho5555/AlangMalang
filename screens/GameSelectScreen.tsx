@@ -1,5 +1,6 @@
-import React from 'react';
-import { Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import Text from '../component/DefaultText';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ScreenProps } from '../types';
 import GameCarousel from '../component/GameCarousel';
@@ -9,6 +10,7 @@ import GameHeader from '../component/GameHeader';
 import { heightScale, widthScale } from '../utils/Scaling';
 import GameSettings from '../component/modal/GameSettings';
 import PlayerSettings from '../component/modal/PlayerSettings';
+import {BackHandler} from 'react-native';
 
 export default function GameSelectScreen({ navigation }: ScreenProps) {
     const gameList = useAppSelector((state) => state.game.gameList);
@@ -22,6 +24,12 @@ export default function GameSelectScreen({ navigation }: ScreenProps) {
     const handlerGameSetting = () => {
         setGameSettingModalVisible(true);
     };
+
+    useEffect(() => {
+        BackHandler.addEventListener('hardwareBackPress', () => {
+            return true;
+        });
+    }, []);
 
     return (
         <>
@@ -140,12 +148,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: Color.background,
         paddingTop: Padding.ContainerPaddingTop
-    },
-    mainText: {
-        color: Color.mainText,
-        textAlign: 'center',
-        fontSize: heightScale(50),
-        fontWeight: 'bold'
     },
     carouselOuter: {
         marginTop: heightScale(35),

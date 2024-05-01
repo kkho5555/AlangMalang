@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, TouchableOpacity, Modal, Pressable } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
+import Text from '../component/DefaultText';
 import { ScreenProps } from '../types';
 import { useAppSelector } from '../app/hooks';
 import { useDispatch } from 'react-redux';
@@ -166,6 +167,7 @@ export default function InGameScreen({ navigation }: ScreenProps) {
                                   height={heightScale(18)}
                                   borderRadius={999}
                                   animationType={'timing'}
+                                  unfilledColor='#898b89'
                                   color={backGroundColorList[backGroundColorIndex][0]} progress={gameTime / playTime}
                                   borderColor="transparent" />
                 </View>
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#434642',
         paddingTop: heightScale(40),
         paddingHorizontal: widthScale(40),
-        paddingBottom: 24
+        paddingBottom: heightScale(24)
     },
     timerContainer: {
         flexDirection: 'row',

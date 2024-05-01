@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { ScreenProps } from '../types';
 import GameHeader from '../component/GameHeader';
 import { Color, Padding } from '../assets/GlobalStyles';
 import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
 import { useAppSelector } from '../app/hooks';
-import { setTeam } from '../features/team/teamSlice';
-
+import Text from '../component/DefaultText';
 export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
     const [currentTeamState, setCurrentTeamState] = React.useState(-1);
     const [isSelectingRandomTeam, setIsSelectingRandomTeam] =
@@ -189,7 +188,7 @@ const styles = StyleSheet.create({
     randomText: {
         color: '#FFFFFF',
         fontSize: heightScale(30),
-        fontWeight: 'bold',
+        fontWeight: '600',
         marginLeft: heightScale(20)
     },
     teamContainer: {
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
         fontSize: heightScale(40),
         marginTop: heightScale(10),
         textAlign: 'center',
-        fontWeight: 'bold',
+        fontWeight: '600',
         flexWrap: 'wrap',
         color: '#FFFFFF'
     },
@@ -242,6 +241,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#2C2F2B',
         fontSize: heightScale(40),
-        fontWeight: 'bold'
+        fontWeight: '600'
     }
 });

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
+import Text from '../component/DefaultText';
 import { ScreenProps } from '../types';
 import GameHeader from '../component/GameHeader';
 import { Color, Padding } from '../assets/GlobalStyles';

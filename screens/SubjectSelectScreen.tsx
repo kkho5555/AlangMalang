@@ -1,13 +1,13 @@
 import React from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     ScrollView,
     Pressable
 } from 'react-native';
-import { GameSubjectType, ScreenProps } from '../types';
+import Text from '../component/DefaultText';
+import { ScreenProps } from '../types';
 import { Color, Padding } from '../assets/GlobalStyles';
 import { widthScale, heightScale } from '../utils/Scaling';
 import GameHeader from '../component/GameHeader';
@@ -58,7 +58,7 @@ export default function InGameScreen({ navigation }: ScreenProps) {
             style={styles.container}
         >
             <GameHeader
-                title="주제선택"
+                title="주제 선택"
                 navigation={navigation}
                 isBack
                 isTeamSetting={false}
@@ -82,7 +82,7 @@ export default function InGameScreen({ navigation }: ScreenProps) {
                                     style={[
                                         styles.subjectWrapper,
                                         currentSubject === index &&
-                                            styles.currentSubjectWrapper
+                                        styles.currentSubjectWrapper
                                     ]}
                                 >
                                     <Image

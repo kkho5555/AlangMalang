@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     TouchableOpacity,
     Modal,
-    Switch,
     Pressable,
     Dimensions,
     GestureResponderEvent, ScrollView, TextInput, Button
 } from 'react-native';
-import { heightScale, moderateScale, widthScale } from '../../utils/Scaling';
+import Text from '../DefaultText';
+import { heightScale, widthScale } from '../../utils/Scaling';
 
 interface IScoreResetProps {
     modalVisible: boolean;

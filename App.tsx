@@ -17,6 +17,13 @@ export default function App() {
             try {
                 // Pre-load fonts, make any API calls you need to do here
                 await Font.loadAsync(Entypo.font);
+                await Font.loadAsync({
+                    'ONE Mobile POP': require('./assets/fonts/ONE Mobile POP/ONE Mobile POP.ttf'),
+                    'Pretendard': require('./assets/fonts/Pretendard/Pretendard-Regular.ttf'),
+                    'Pretendard500': require('./assets/fonts/Pretendard/Pretendard-Medium.ttf'),
+                    'Pretendard600': require('./assets/fonts/Pretendard/Pretendard-SemiBold.ttf'),
+                    'Pretendard700': require('./assets/fonts/Pretendard/Pretendard-Bold.ttf')
+                });
 
                 // Artificially delay for two seconds to simulate a slow loading
                 // experience. Please remove this if you copy and paste the code!

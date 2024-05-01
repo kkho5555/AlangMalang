@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import GameCard from './GameCard';
 import { GameType, ScreenProps } from '../types';

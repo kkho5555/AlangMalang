@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import Text from './DefaultText';
 import { ScreenProps } from '../types';
 import { Color } from '../assets/GlobalStyles';
 import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
@@ -131,7 +132,8 @@ const styles = StyleSheet.create({
         color: Color.mainText,
         textAlign: 'center',
         fontSize: heightScale(50),
-        fontWeight: 'bold'
+        fontWeight: '600',
+        fontFamily: 'ONE Mobile POP'
     },
     settingWrap: {
         alignItems: 'center',

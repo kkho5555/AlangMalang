@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     TouchableOpacity,
@@ -10,6 +9,7 @@ import {
     Dimensions,
     GestureResponderEvent,
 } from 'react-native';
+import Text from '../DefaultText';
 import { heightScale, moderateScale, widthScale } from '../../utils/Scaling';
 
 interface IScoreResetProps {

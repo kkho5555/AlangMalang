@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { GameOptionType, ScreenProps } from '../types';
 import { setGameOption } from '../features/game/gameSlice';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import GameHeader from '../component/GameHeader';
 import { Color } from '../assets/GlobalStyles';
 import { heightScale, widthScale } from '../utils/Scaling';
+import Text from '../component/DefaultText';
 
 export default function GameSettingsScreen({ navigation }: ScreenProps) {
     const gameOption: GameOptionType = {
@@ -238,7 +239,7 @@ const styles = StyleSheet.create({
         width: widthScale(130)
     },
     divider: {
-        fontWeight: 'normal',
+        fontWeight: '500',
         marginHorizontal: heightScale(50)
     },
     settingItemBox: {

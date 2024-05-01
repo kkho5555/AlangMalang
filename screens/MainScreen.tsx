@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import Text from '../component/DefaultText';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Progress from 'react-native-progress';
 import { ScreenNavigationProp, ScreenProps } from '../types';
@@ -68,25 +69,6 @@ export default function MainScreen({ navigation }: ScreenProps) {
             />
             <Text style={styles.typo}>{typoList[typoIndex]}</Text>
         </LinearGradient>
-    );
-}
-function CardItem({
-    title,
-    subtitle,
-    navigation
-}: {
-    title: string;
-    subtitle: string;
-    navigation: ScreenNavigationProp;
-}) {
-    return (
-        <TouchableOpacity
-            className="bg-white m-2 p-4 rounded-lg flex-1 max-w-sm"
-            onPress={() => navigation.navigate('InGame')}
-        >
-            <Text className="text-xl font-bold mt-2">{title}</Text>
-            <Text className="text-sm text-gray-600">{subtitle}</Text>
-        </TouchableOpacity>
     );
 }
 

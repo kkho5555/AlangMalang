@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import Text from '../component/DefaultText';
 import { LinearGradient } from 'expo-linear-gradient';
 import { GameType, ScreenProps } from '../types';
-import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
+import { widthScale, heightScale } from '../utils/Scaling';
 
 interface IPage {
     item: Pick<
@@ -187,7 +188,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#ffffff',
         textAlign: 'center',
-        fontWeight: 'bold',
+        fontWeight: '600',
         fontSize: heightScale(25)
     }
 });
