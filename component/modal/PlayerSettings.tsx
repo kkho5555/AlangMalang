@@ -1,16 +1,26 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import {
-    View,
-    StyleSheet,
+    Dimensions,
+    GestureResponderEvent,
     Image,
-    TouchableOpacity,
     Modal,
     Pressable,
-    Dimensions,
-    GestureResponderEvent, ScrollView, TextInput, Button
+    ScrollView,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
-import Text from '../DefaultText';
+import { updateTeam } from '../../app/api';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import {
+    createTeam,
+    removeTeam,
+    setTeams
+} from '../../features/game/gameSlice';
 import { heightScale, widthScale } from '../../utils/Scaling';
+import Text from '../DefaultText';
 
 interface IScoreResetProps {
     modalVisible: boolean;
@@ -20,50 +30,42 @@ interface IScoreResetProps {
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 export default function ScoreReset({
-                                       modalVisible,
-                                       setModalVisible
-                                   }: IScoreResetProps) {
+    modalVisible,
+    setModalVisible
+}: IScoreResetProps) {
+    //get teamList
+    const teamList = useAppSelector((state) => state.game.teamList);
+    const [tmpValue, onChangeTmpValue] = useState('');
+    const [tmpTeamList, onChangeTmpTeamList] = useState(teamList);
+    const [focusedTeamIndex, setFocusedTeamIndex] = useState(-1);
+    let userId = '';
+    const dispatch = useAppDispatch();
 
-    const initTeamList = [
-        { name: '심연의 그린', editable: true, isUse: true, isEditing: false },
-        { name: '우아한 코랄', editable: true, isUse: true, isEditing: false },
-        { name: '진중한 블루', editable: true, isUse: false, isEditing: false },
-        { name: '청초한 레드', editable: true, isUse: false, isEditing: false },
-        { name: '차분한 블랙', editable: true, isUse: false, isEditing: false },
-        { name: '정렬의 옐로', editable: true, isUse: false, isEditing: false }
-    ];
-
-    const [teamList, setTeamList] = useState([...initTeamList]);
-
-    const addTeam = (index: number) => {
-        const updatedTeamList = [...teamList];
-        updatedTeamList[index].isUse = true;
-        setTeamList(updatedTeamList);
+    const addTeam = async (index: number) => {
+        const tmpUserId = await AsyncStorage.getItem('userId');
+        if (tmpUserId) {
+            userId = tmpUserId;
+            createTeam({
+                teamName: '',
+                userId: tmpUserId
+            });
+        }
     };
 
-    //FIXME : 중간에서 팀을 삭제하는 상황을 고려해야 하기 때문에 로직 수정 필요
-    const removeTeam = (index: number) => {
-        const updatedTeamList = [...teamList];
-        updatedTeamList[index].isUse = false;
-        setTeamList(updatedTeamList);
+    const removeTeamAction = (index: number) => {
+        removeTeam({
+            teamId: tmpTeamList[index].id,
+            userId
+        });
     };
 
     const handleTeamNameChange = (text: string, index: number) => {
-        const updatedTeamList = [...teamList];
-        updatedTeamList[index].name = text;
-        setTeamList(updatedTeamList);
-    };
-
-    const handlerTeamOnFocus = (index: number) => {
-        const updatedTeamList = [...teamList];
-        updatedTeamList[index].isEditing = true;
-        setTeamList(updatedTeamList);
-    };
-
-    const handlerTeamOnBlur = (index: number) => {
-        const updatedTeamList = [...teamList];
-        updatedTeamList[index].isEditing = false;
-        setTeamList(updatedTeamList);
+        onChangeTmpValue(text);
+        onChangeTmpTeamList(
+            teamList.map((team, i) =>
+                i === index ? { ...team, name: text } : team
+            )
+        );
     };
 
     const handlerBackground = (e: GestureResponderEvent) => {
@@ -72,6 +74,10 @@ export default function ScoreReset({
         }
         setModalVisible(!modalVisible);
     };
+
+    useEffect(() => {
+        onChangeTmpTeamList(teamList);
+    }, [teamList]);
 
     return (
         <Modal
@@ -102,193 +108,237 @@ export default function ScoreReset({
 
                         <View style={styles.modalContent}>
                             <View>
-                                <Text style={styles.modalTitle}>
-                                    팀 설정
-                                </Text>
+                                <Text style={styles.modalTitle}>팀 설정</Text>
                             </View>
 
                             <View style={{ flex: 1, overflow: 'hidden' }}>
                                 <ScrollView>
+                                    {tmpTeamList.map((team, index) => {
+                                        return (
+                                            <View
+                                                style={[
+                                                    styles.teamBoxWrapper,
+                                                    styles.selectedTeamBoxWrapper
+                                                ]}
+                                                key={index}
+                                            >
+                                                <TextInput
+                                                    editable
+                                                    style={[
+                                                        styles.teamText,
+                                                        styles.notSelectedTeamText
+                                                    ]}
+                                                    value={team.name}
+                                                    onChangeText={(text) =>
+                                                        handleTeamNameChange(
+                                                            text,
+                                                            index
+                                                        )
+                                                    }
+                                                    onFocus={() =>
+                                                        setFocusedTeamIndex(
+                                                            index
+                                                        )
+                                                    }
+                                                    onBlur={() =>
+                                                        setFocusedTeamIndex(-1)
+                                                    }
+                                                />
 
-                                    {teamList.map((team, index) => {
-                                        if (team.isUse) {
-                                            return (
-                                                <View
-                                                    style={[styles.teamBoxWrapper, !team.isUse && styles.nonSelectTeamBoxWrapper, team.isEditing && styles.selectedTeamBoxWrapper]}
-                                                    key={index}>
-                                                    <TextInput
-                                                        style={[styles.teamText, !team.isUse && styles.notSelectedTeamText]}
-                                                        value={team.name}
-                                                        onChangeText={(text) => handleTeamNameChange(text, index)}
-                                                        editable={team.editable}
-                                                        onFocus={() => {
-                                                            handlerTeamOnFocus(index);
+                                                {focusedTeamIndex === index && (
+                                                    <TouchableOpacity
+                                                        onPress={async () => {
+                                                            dispatch(
+                                                                setTeams(
+                                                                    teamList
+                                                                )
+                                                            );
+                                                            await updateTeam({
+                                                                teamId: team.id,
+                                                                teamName:
+                                                                    tmpValue,
+                                                                userId
+                                                            });
                                                         }}
-                                                        onBlur={() => {
-                                                            handlerTeamOnBlur(index);
-                                                        }}
-                                                    />
-                                                    {team.isEditing && (
-                                                        <Pressable onPress={() => handlerTeamOnBlur(index)}>
-                                                            <View style={styles.confirmWrapper}>
-                                                                <Text style={styles.confirmText}>작성완료</Text>
-                                                                <Image resizeMode="cover"
-                                                                       style={styles.iconCheck}
-                                                                       source={require('../../assets/icons/icon-check.png')} />
-                                                            </View>
-                                                        </Pressable>
-                                                    )}
-                                                    {index > 1 && team.isUse && !team.isEditing && (
-                                                        <TouchableOpacity onPress={() => removeTeam(index)}>
-                                                            <Image resizeMode="cover"
-                                                                   style={styles.iconImages}
-                                                                   source={require('../../assets/icons/icon-minus.png')} />
-                                                        </TouchableOpacity>
-                                                    )}
-                                                </View>
-                                            );
-                                        }
-                                    })}
-
-                                    {teamList.map((team, index) => {
-                                        if (!team.isUse && index === teamList.filter((team) => team.isUse).length) {
-                                            return (
-                                                <View
-                                                    style={[styles.teamBoxWrapper, styles.nonSelectTeamBoxWrapper]}
-                                                    key={index}
-                                                >
-                                                    <Text
-                                                        style={[styles.teamText, styles.notSelectedTeamText]}
                                                     >
-                                                        {team.name}
-                                                    </Text>
-                                                    <TouchableOpacity onPress={() => addTeam(index)}>
-                                                        <Image resizeMode="cover"
-                                                               style={styles.iconImages}
-                                                               source={require('../../assets/icons/icon-plus.png')}
-                                                        />
+                                                        <View
+                                                            style={
+                                                                styles.confirmWrapper
+                                                            }
+                                                        >
+                                                            <Text
+                                                                style={
+                                                                    styles.confirmText
+                                                                }
+                                                            >
+                                                                작성완료
+                                                            </Text>
+                                                            <Image
+                                                                resizeMode="cover"
+                                                                style={
+                                                                    styles.iconCheck
+                                                                }
+                                                                source={require('../../assets/icons/icon-check.png')}
+                                                            />
+                                                        </View>
                                                     </TouchableOpacity>
-                                                </View>
-                                            );
-                                        }
+                                                )}
+
+                                                <TouchableOpacity
+                                                    onPress={() =>
+                                                        removeTeamAction(index)
+                                                    }
+                                                >
+                                                    <Image
+                                                        resizeMode="cover"
+                                                        style={
+                                                            styles.iconImages
+                                                        }
+                                                        source={require('../../assets/icons/icon-minus.png')}
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
+                                        );
                                     })}
+
+                                    <View
+                                        style={[
+                                            styles.teamBoxWrapper,
+                                            styles.nonSelectTeamBoxWrapper
+                                        ]}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.teamText,
+                                                styles.notSelectedTeamText
+                                            ]}
+                                        >
+                                            상큼한 에메랄드
+                                        </Text>
+                                        <TouchableOpacity
+                                            onPress={() => addTeam(1)}
+                                        >
+                                            <Image
+                                                resizeMode="cover"
+                                                style={styles.iconImages}
+                                                source={require('../../assets/icons/icon-plus.png')}
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
                                 </ScrollView>
                             </View>
                         </View>
-
                     </View>
                 </View>
             </Pressable>
         </Modal>
-    )
-        ;
+    );
 }
 
 const styles = StyleSheet.create({
-        centeredView: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'rgba(67, 70, 66, 0.8)'
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(67, 70, 66, 0.8)'
+    },
+    modalView: {
+        backgroundColor: 'rgba(20, 23, 19, 0.9)',
+        shadowColor: 'rgba(0, 0, 0, 0.8)',
+        shadowOffset: {
+            width: 0,
+            height: 4
         },
-        modalView: {
-            backgroundColor: 'rgba(20, 23, 19, 0.9)',
-            shadowColor: 'rgba(0, 0, 0, 0.8)',
-            shadowOffset: {
-                width: 0,
-                height: 4
-            },
-            shadowRadius: heightScale(20),
-            elevation: heightScale(20),
-            shadowOpacity: 1,
-            borderColor: '#727471',
-            flex: 1,
-            width: windowWidth * 0.8,
-            maxHeight: windowHeight * 0.8,
-            borderWidth: 2,
-            borderStyle: 'solid',
-            borderRadius: heightScale(16),
-            paddingHorizontal: heightScale(150),
-            paddingTop: heightScale(45),
-            paddingBottom: heightScale(75)
-        },
-        closeButtonWrapper: {
-            top: heightScale(35),
-            right: heightScale(45),
-            width: widthScale(48),
-            height: heightScale(48),
-            overflow: 'hidden',
-            position: 'absolute'
-        },
-        closeIcon: {
-            width: heightScale(48),
-            height: heightScale(48)
-        },
-        modalContent: {
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-        },
-        modalTitle: {
-            marginBottom: heightScale(70),
-            fontSize: heightScale(48),
-            letterSpacing: heightScale(-0.5),
-            color: '#f3f3f3',
-            textAlign: 'center'
-        },
-        teamBoxWrapper: {
-            borderRadius: heightScale(16),
-            backgroundColor: '#fff',
-            borderStyle: 'solid',
-            borderColor: '#d0d1d0',
-            borderWidth: 1,
-            width: '100%',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingLeft: widthScale(46),
-            paddingRight: widthScale(46),
-            paddingVertical: heightScale(22),
-            flexDirection: 'row',
-            marginBottom: heightScale(24)
-        },
-        selectedTeamBoxWrapper: {
-            paddingRight: widthScale(29)
-        },
-        nonSelectTeamBoxWrapper: {
-            backgroundColor: '#2c2f2b',
-            borderColor: '#727471'
-        },
-        teamText: {
-            fontSize: heightScale(48),
-            letterSpacing: heightScale(-0.5),
-            color: '#141713'
-        },
-        notSelectedTeamText: {
-            color: '#5b5d5a'
-        },
-        confirmWrapper: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: heightScale(8),
-            backgroundColor: '#109aff',
-            paddingHorizontal: widthScale(24),
-            paddingVertical: heightScale(8)
-        },
-        confirmText: {
-            fontSize: heightScale(28),
-            letterSpacing: heightScale(-0.3),
-            lineHeight: heightScale(40),
-            fontWeight: '500',
-            color: '#fff'
-        },
-        iconCheck: {
-            width: heightScale(40),
-            height: heightScale(40)
-        },
-        iconImages: {
-            width: heightScale(60),
-            height: heightScale(60)
-        }
-    })
-;
+        shadowRadius: heightScale(20),
+        elevation: heightScale(20),
+        shadowOpacity: 1,
+        borderColor: '#727471',
+        flex: 1,
+        width: windowWidth * 0.8,
+        maxHeight: windowHeight * 0.8,
+        borderWidth: 2,
+        borderStyle: 'solid',
+        borderRadius: heightScale(16),
+        paddingHorizontal: heightScale(150),
+        paddingTop: heightScale(45),
+        paddingBottom: heightScale(75)
+    },
+    closeButtonWrapper: {
+        top: heightScale(35),
+        right: heightScale(45),
+        width: widthScale(48),
+        height: heightScale(48),
+        overflow: 'hidden',
+        position: 'absolute'
+    },
+    closeIcon: {
+        width: heightScale(48),
+        height: heightScale(48)
+    },
+    modalContent: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+    },
+    modalTitle: {
+        marginBottom: heightScale(70),
+        fontSize: heightScale(48),
+        letterSpacing: heightScale(-0.5),
+        color: '#f3f3f3',
+        textAlign: 'center'
+    },
+    teamBoxWrapper: {
+        borderRadius: heightScale(16),
+        backgroundColor: '#fff',
+        borderStyle: 'solid',
+        borderColor: '#d0d1d0',
+        borderWidth: 1,
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingLeft: widthScale(46),
+        paddingRight: widthScale(46),
+        paddingVertical: heightScale(22),
+        flexDirection: 'row',
+        marginBottom: heightScale(24)
+    },
+    selectedTeamBoxWrapper: {
+        paddingRight: widthScale(29)
+    },
+    nonSelectTeamBoxWrapper: {
+        backgroundColor: '#2c2f2b',
+        borderColor: '#727471'
+    },
+    teamText: {
+        fontSize: heightScale(48),
+        letterSpacing: heightScale(-0.5),
+        color: '#141713'
+    },
+    notSelectedTeamText: {
+        color: '#5b5d5a'
+    },
+    confirmWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: heightScale(8),
+        backgroundColor: '#109aff',
+        paddingHorizontal: widthScale(24),
+        paddingVertical: heightScale(8)
+    },
+    confirmText: {
+        fontSize: heightScale(28),
+        letterSpacing: heightScale(-0.3),
+        lineHeight: heightScale(40),
+        fontWeight: '500',
+        color: '#fff'
+    },
+    iconCheck: {
+        width: heightScale(40),
+        height: heightScale(40)
+    },
+    iconImages: {
+        width: heightScale(60),
+        height: heightScale(60)
+    }
+});

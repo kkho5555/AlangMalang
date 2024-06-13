@@ -1,10 +1,10 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { environmentSlice } from '../features/environment/environmentSlice';
 import { gameSlice } from '../features/game/gameSlice';
-import { teamSlice } from '../features/team/teamSlice';
 
 const rootReducer = combineReducers({
     game: gameSlice.reducer,
-    team: teamSlice.reducer
+    environment: environmentSlice.reducer
 });
 const store = configureStore({
     reducer: rootReducer

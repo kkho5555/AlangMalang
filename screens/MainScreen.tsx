@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import Text from '../component/DefaultText';
 import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
+import 'react-native-get-random-values';
 import * as Progress from 'react-native-progress';
-import { ScreenNavigationProp, ScreenProps } from '../types';
+import { v4 } from 'uuid';
+import { login } from '../app/api';
 import { useAppDispatch } from '../app/hooks';
-import { fetchGameData } from '../features/game/gameSlice';
-import { widthScale, heightScale } from '../utils/Scaling';
-
+import Text from '../component/DefaultText';
+import { setGameList, setTeams } from '../features/game/gameSlice';
+import { GameType, ScreenProps, TeamType } from '../types';
+import { heightScale, widthScale } from '../utils/Scaling';
+// @ts-ignore
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import 'react-native-get-random-values';
 export default function MainScreen({ navigation }: ScreenProps) {
     const [loading, setLoading] = React.useState(0);
     const [typoIndex, setTypoIndex] = React.useState(0);
@@ -20,10 +25,9 @@ export default function MainScreen({ navigation }: ScreenProps) {
     ];
 
     const dispatch = useAppDispatch();
-    dispatch(fetchGameData());
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const interval = setInterval(async () => {
             if (loading < 1) {
                 setTypoIndex(
                     (prevIndex) => (prevIndex + 1) % (typoList.length - 1)
@@ -34,9 +38,50 @@ export default function MainScreen({ navigation }: ScreenProps) {
                 setLoading((prevLoading) => prevLoading + 0.1);
             } else {
                 clearInterval(interval);
+                let uniqueId = '';
+                if ((await AsyncStorage.getItem('userId')) === null) {
+                    uniqueId = v4();
+                    await AsyncStorage.setItem('userId', uniqueId);
+                } else {
+                    uniqueId = (await AsyncStorage.getItem('userId')) as string;
+                }
+                await login({ id: uniqueId }).then((res) => {
+                    const gameList: GameType[] = [];
+                    const teamList: TeamType[] = [];
+                    res?.game.map((game) => {
+                        const tmpGame: GameType = {
+                            id: game.gameId,
+                            bgColor1: '#00BF63',
+                            bgColor2: '#87FFC5',
+                            gameManual: {
+                                participant: 'test',
+                                tester: 'test'
+                            },
+                            headCount: {
+                                min: 4,
+                                max: 10
+                            },
+                            imgPath: '../assets/images/backgrounds/banana.png',
+                            num: game.gameId,
+                            title: game.gameName,
+                            type: 'testGame'
+                        };
+                        gameList.push(tmpGame);
+                    });
+                    res?.team.map((team) => {
+                        const tmpTeam: TeamType = {
+                            id: team.teamId,
+                            name: team.teamName,
+                            teamColor: '#00BF63'
+                        };
+                        teamList.push(tmpTeam);
+                    });
+                    dispatch(setGameList(gameList));
+                    dispatch(setTeams(teamList));
+                });
                 navigation.navigate('GameSelect');
             }
-        }, 500);
+        }, 5);
         return () => clearInterval(interval);
     }, [loading]);
 

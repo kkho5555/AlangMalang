@@ -1,45 +1,56 @@
-import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { ScreenProps } from '../types';
-import GameHeader from '../component/GameHeader';
+// PlayerSettingScreen.tsx
+
+import React, { useEffect, useState } from 'react';
+import {
+    ActivityIndicator,
+    Alert,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
-import { widthScale, heightScale, moderateScale } from '../utils/Scaling';
-import { useAppSelector } from '../app/hooks';
 import Text from '../component/DefaultText';
+import GameHeader from '../component/GameHeader';
+import { setCurrentTeam } from '../features/game/gameSlice';
+import { ScreenProps } from '../types';
+import { heightScale, widthScale } from '../utils/Scaling';
+
 export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
-    const [currentTeamState, setCurrentTeamState] = React.useState(-1);
-    const [isSelectingRandomTeam, setIsSelectingRandomTeam] =
-        React.useState(false);
+    const [currentTeamState, setCurrentTeamState] = useState(-1);
+    const [isSelectingRandomTeam, setIsSelectingRandomTeam] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const currentTeam = useAppSelector((state) => state.team.currentTeam);
+    const dispatch = useAppDispatch();
+    // const currentTeam = useAppSelector((state) => state.team.currentTeam);
+    const teamList = useAppSelector((state) => state.game.teamList);
 
-    const TeamList = [
-        {
-            id: '1',
-            name: '심연의 그린',
-            selectColor: '#00BF63'
-        },
-        {
-            id: '2',
-            name: '우아한 코랄',
-            selectColor: '#FC7878'
-        },
-        {
-            id: '3',
-            name: '진중한 블루',
-            selectColor: '#109AFF'
-        }
-    ];
+    useEffect(() => {
+        const loadTeams = async () => {
+            try {
+                teamList;
+            } catch (error) {
+                Alert.alert(
+                    '오류',
+                    '팀 목록을 불러오는 중 문제가 발생했습니다.'
+                );
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadTeams();
+    }, [dispatch]);
 
     const selectRandomTeam = () => {
         setIsSelectingRandomTeam(true);
 
         let prevIndex = currentTeamState;
         const interval = setInterval(() => {
-            let randomIndex = Math.floor(Math.random() * TeamList.length);
+            let randomIndex = Math.floor(Math.random() * teamList.length);
 
             while (randomIndex === prevIndex) {
-                randomIndex = Math.floor(Math.random() * TeamList.length);
+                randomIndex = Math.floor(Math.random() * teamList.length);
             }
 
             setCurrentTeamState(randomIndex);
@@ -49,6 +60,7 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
         setTimeout(() => {
             clearInterval(interval);
             setIsSelectingRandomTeam(false);
+            dispatch(setCurrentTeam(teamList[prevIndex]));
         }, 2000);
     };
 
@@ -61,7 +73,7 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
     const handlerSelectTeam = (index: number) => {
         if (!isSelectingRandomTeam) {
             setCurrentTeamState(index);
-            // setTeam(TeamList[index]);
+            dispatch(setCurrentTeam(teamList[index]));
         }
     };
 
@@ -70,6 +82,14 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
             navigation.navigate('InGame');
         }
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color={Color.primary} />
+            </View>
+        );
+    }
 
     return (
         <View
@@ -101,7 +121,7 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
                 </TouchableOpacity>
 
                 <View style={styles.teamContainer}>
-                    {TeamList.map((team, index) => (
+                    {teamList.map((team, index) => (
                         <TouchableOpacity
                             onPress={() => handlerSelectTeam(index)}
                             key={index}
@@ -110,9 +130,8 @@ export default function PlayerSettingsScreen({ navigation }: ScreenProps) {
                                 style={[
                                     styles.teamWrapper,
                                     currentTeamState === index && {
-                                        backgroundColor:
-                                            TeamList[index].selectColor,
-                                        shadowColor: TeamList[index].selectColor
+                                        backgroundColor: team.selectColor,
+                                        shadowColor: team.selectColor
                                     },
                                     currentTeamState === index &&
                                         styles.selectTeamWrapper
@@ -156,6 +175,12 @@ const styles = StyleSheet.create({
         backgroundColor: Color.background,
         paddingHorizontal: widthScale(30),
         paddingTop: Padding.ContainerPaddingTop
+    },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Color.background
     },
     subContainer: {
         flex: 1,

@@ -1,13 +1,15 @@
+// InGameScreen.tsx
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
+import { Image, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import * as Progress from 'react-native-progress';
+import { endGame, startGame } from '../app/api';
+import { EndGameRequest, StartGameResponse } from '../app/api.d';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import Text from '../component/DefaultText';
 import { ScreenProps } from '../types';
-import { useAppSelector } from '../app/hooks';
-import { useDispatch } from 'react-redux';
-import { pushGameResult, setGameResult } from '../features/game/gameSlice';
-import { LinearGradient } from 'expo-linear-gradient';
-import { widthScale, heightScale } from '../utils/Scaling';
-import * as Progress from 'react-native-progress';
+import { heightScale, widthScale } from '../utils/Scaling';
 
 const backGroundColorList = [
     ['#35aaff', '#fff3b2'],
@@ -16,7 +18,7 @@ const backGroundColorList = [
 ];
 
 export default function InGameScreen({ navigation }: ScreenProps) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const currentGameOption = useAppSelector(
         (state) => state.game.currentGameOption
     );
@@ -40,50 +42,35 @@ export default function InGameScreen({ navigation }: ScreenProps) {
     const [correctAnswers, setCorrectAnswers] = useState(0);
     const [isGameActive, setIsGameActive] = useState(false);
     const [isPaused, setIsPaused] = useState(false); // 추가된 일시정지 상태
+
     const [backGroundColorIndex, setBackGroundColorIndex] = useState(0);
 
-    const getQuizWord = () => {
-        const [easy, hard] = currentGameData.data;
-        const easyWords = easy.words;
-        const hardWords = hard.words;
-        const random = Math.random();
-        let randomIndex = 0;
-        switch (difficulty) {
-            case 'easy':
-                randomIndex = Math.floor(Math.random() * easyWords.length);
-                return easyWords[randomIndex];
-            case 'normal':
-                if (random < 0.7) {
-                    randomIndex = Math.floor(Math.random() * easyWords.length);
-                    return easyWords[randomIndex];
-                }
-                randomIndex = Math.floor(Math.random() * hardWords.length);
-                return hardWords[randomIndex];
-            case 'hard':
-                if (random < 0.4) {
-                    randomIndex = Math.floor(Math.random() * easyWords.length);
-                    return easyWords[randomIndex];
-                }
-                randomIndex = Math.floor(Math.random() * hardWords.length);
-                return hardWords[randomIndex];
-            default:
-                return '';
+    let words: StartGameResponse[] = [];
+    const getQuizWord = async () => {
+        if (words.length === 0) {
+            words = (await startGame(currentGame.id, difficulty)) || [];
         }
+        const index = Math.floor(Math.random() * words.length);
+        const word = words[index].topicDataName;
+        words.splice(index, 1);
+        return word;
     };
 
     useEffect(() => {
         let timer: NodeJS.Timeout | null = null;
         if (startCounter > 0) {
-            timer = setInterval(() => {
+            timer = setInterval(async () => {
                 setStartCounter((prev) => prev - 1);
             }, 1000);
         } else if (startCounter === 0 && !isPaused && gameTime > 0) {
             setIsGameActive(true);
-            currentWord === '' && setCurrentWord(getQuizWord());
+            if (currentWord === '') {
+                getQuizWord().then(setCurrentWord);
+            }
             timer = setInterval(() => {
                 setGameTime((prev) => prev - 1);
 
-                if (gameTime === Math.floor(playTime * 2 / 3)) {
+                if (gameTime === Math.floor((playTime * 2) / 3)) {
                     setBackGroundColorIndex(1);
                 } else if (gameTime === Math.floor(playTime / 3)) {
                     setBackGroundColorIndex(2);
@@ -106,24 +93,26 @@ export default function InGameScreen({ navigation }: ScreenProps) {
     const handleResume = () => {
         setIsPaused(false);
     };
+
     const handleCorrectAnswer = () => {
         setCorrectAnswers((prev) => prev + 1);
-        setCurrentWord(getQuizWord()); // Get next word
+        getQuizWord().then(setCurrentWord);
     };
 
     const handlePass = () => {
         if (passesLeft > 0) {
-            setCurrentWord(getQuizWord());
+            getQuizWord().then(setCurrentWord);
             setPassesLeft((prev) => prev - 1);
         }
     };
+
     const handleRestart = () => {
         setGameTime(playTime);
         setCorrectAnswers(0);
         setPassesLeft(passLimit);
         setIsPaused(false);
         setIsGameActive(false);
-        setCurrentWord(getQuizWord());
+        getQuizWord().then(setCurrentWord);
         setStartCounter(3);
         setBackGroundColorIndex(0);
     };
@@ -134,70 +123,91 @@ export default function InGameScreen({ navigation }: ScreenProps) {
     };
 
     const handleEndGame = () => {
-        dispatch(
-            setGameResult({
-                game: currentGame,
-                subject: currentGameSubject,
-                option: currentGameOption,
-                score: correctAnswers,
-                playedAt: new Date()
-            })
-        );
-        dispatch(
-            pushGameResult({
+        const setGameResult = async () => {
+            const data: EndGameRequest = {
+                gameId: currentGame.id,
                 teamId: currentTeam.id,
-                result: currentGameResult
-            })
-        );
-        navigation.navigate('EndGame');
+                score: correctAnswers,
+                level: difficulty,
+                playTime: playTime,
+                setPass: passLimit - passesLeft,
+                topicId: currentGameSubject.game.id,
+                usePass: passLimit - passesLeft,
+                userId: (await AsyncStorage.getItem('userId')) as string
+            };
+            const gameResult = await endGame(data);
+            console.log('gameResult', gameResult, data);
+            navigation.navigate('EndGame');
+        };
+        setGameResult();
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.timerContainer}>
                 <View style={styles.timerWrapper}>
-                    <Image style={styles.timerIcon}
-                           resizeMode="contain"
-                           source={require('../assets/icons/icon-clock.png')} />
+                    <Image
+                        style={styles.timerIcon}
+                        resizeMode="contain"
+                        source={require('../assets/icons/icon-clock.png')}
+                    />
                     <Text style={styles.timerText}>{gameTime}s</Text>
                 </View>
 
                 <View style={styles.timerLinearWrapper}>
-                    <Progress.Bar width={widthScale(900)}
-                                  height={heightScale(18)}
-                                  borderRadius={999}
-                                  animationType={'timing'}
-                                  unfilledColor='#898b89'
-                                  color={backGroundColorList[backGroundColorIndex][0]} progress={gameTime / playTime}
-                                  borderColor="transparent" />
+                    <Progress.Bar
+                        width={widthScale(900)}
+                        height={heightScale(18)}
+                        borderRadius={999}
+                        animationType={'timing'}
+                        unfilledColor="#898b89"
+                        color={backGroundColorList[backGroundColorIndex][0]}
+                        progress={gameTime / playTime}
+                        borderColor="transparent"
+                    />
                 </View>
 
                 <TouchableOpacity onPress={handlePause}>
                     <View style={styles.pauseWrapper}>
-                        <Image style={styles.pauseIcon} resizeMode="contain"
-                               source={require('../assets/icons/icon-pause.png')} />
+                        <Image
+                            style={styles.pauseIcon}
+                            resizeMode="contain"
+                            source={require('../assets/icons/icon-pause.png')}
+                        />
                     </View>
                 </TouchableOpacity>
             </View>
 
             <View style={styles.mainContainer}>
-                <LinearGradient style={styles.gameContainer} colors={backGroundColorList[backGroundColorIndex]}>
-                    {!isGameActive && startCounter > 0 &&
+                <LinearGradient
+                    style={styles.gameContainer}
+                    colors={backGroundColorList[backGroundColorIndex]}
+                >
+                    {!isGameActive && startCounter > 0 && (
                         <View style={styles.gameWrapper}>
                             <View style={styles.teamWrapper}>
-                                <Image style={styles.teamIcon} resizeMode="contain"
-                                       source={require('../assets/icons/icon-team.png')} />
-                                <Text style={styles.teamText}>우아한 코랄</Text>
+                                <Image
+                                    style={styles.teamIcon}
+                                    resizeMode="contain"
+                                    source={require('../assets/icons/icon-team.png')}
+                                />
+                                <Text style={styles.teamText}>
+                                    {currentTeam.name}
+                                </Text>
                             </View>
                             <View style={styles.gameTextWrapper}>
-                                <Text style={styles.countDownText}>{startCounter}</Text>
+                                <Text style={styles.countDownText}>
+                                    {startCounter}
+                                </Text>
                             </View>
                         </View>
-                    }
+                    )}
                     {isGameActive && (
                         <View style={styles.gameWrapper}>
                             <View style={styles.gameTextWrapper}>
-                                <Text style={styles.questionText}>{currentWord}</Text>
+                                <Text style={styles.questionText}>
+                                    {currentWord}
+                                </Text>
                             </View>
                         </View>
                     )}
@@ -206,18 +216,27 @@ export default function InGameScreen({ navigation }: ScreenProps) {
                 <View style={styles.manageContainer}>
                     <View style={styles.manageWrapper}>
                         <View style={styles.manageTeamWrapper}>
-                            <Text style={styles.manageTeamText}>우아한 코랄</Text>
+                            <Text style={styles.manageTeamText}>
+                                {currentTeam.name}
+                            </Text>
                         </View>
 
                         <Text style={styles.currentText}>맞춘 문제</Text>
 
-                        <Text style={styles.currentAnswerText}>{correctAnswers}</Text>
+                        <Text style={styles.currentAnswerText}>
+                            {correctAnswers}
+                        </Text>
                     </View>
 
-                    <TouchableOpacity onPress={handlePass} disabled={passesLeft === 0}>
+                    <TouchableOpacity
+                        onPress={handlePass}
+                        disabled={passesLeft === 0}
+                    >
                         <View style={styles.passWrapper}>
                             <Text style={styles.passText}>패스</Text>
-                            <Text style={styles.passLeftText}>{passesLeft} / {passLimit}</Text>
+                            <Text style={styles.passLeftText}>
+                                {passesLeft} / {passLimit}
+                            </Text>
                         </View>
                     </TouchableOpacity>
 
@@ -242,26 +261,56 @@ export default function InGameScreen({ navigation }: ScreenProps) {
 
                         <View style={styles.modalHandlerWrapper}>
                             <TouchableOpacity onPress={handleResume}>
-                                <View style={[styles.handlerWrapper, { backgroundColor: '#109aff' }]}>
-                                    <Image style={styles.modalIcon} resizeMode="contain"
-                                           source={require('../assets/icons/icon-arrow-right.png')} />
-                                    <Text style={styles.handlerText}>이어하기</Text>
+                                <View
+                                    style={[
+                                        styles.handlerWrapper,
+                                        { backgroundColor: '#109aff' }
+                                    ]}
+                                >
+                                    <Image
+                                        style={styles.modalIcon}
+                                        resizeMode="contain"
+                                        source={require('../assets/icons/icon-arrow-right.png')}
+                                    />
+                                    <Text style={styles.handlerText}>
+                                        이어하기
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={handleRestart}>
-                                <View style={[styles.handlerWrapper, { backgroundColor: '#00bf63' }]}>
-                                    <Image style={styles.modalIcon} resizeMode="contain"
-                                           source={require('../assets/icons/icon-refresh.png')} />
-                                    <Text style={styles.handlerText}>다시하기</Text>
+                                <View
+                                    style={[
+                                        styles.handlerWrapper,
+                                        { backgroundColor: '#00bf63' }
+                                    ]}
+                                >
+                                    <Image
+                                        style={styles.modalIcon}
+                                        resizeMode="contain"
+                                        source={require('../assets/icons/icon-refresh.png')}
+                                    />
+                                    <Text style={styles.handlerText}>
+                                        다시하기
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
 
                             <TouchableOpacity onPress={handleQuit}>
-                                <View style={[styles.handlerWrapper, { backgroundColor: '#fa7777' }]}>
-                                    <Image style={styles.modalIcon} resizeMode="contain"
-                                           source={require('../assets/icons/icon-out.png')} />
-                                    <Text style={styles.handlerText}>그만하기</Text>
+                                <View
+                                    style={[
+                                        styles.handlerWrapper,
+                                        { backgroundColor: '#fa7777' }
+                                    ]}
+                                >
+                                    <Image
+                                        style={styles.modalIcon}
+                                        resizeMode="contain"
+                                        source={require('../assets/icons/icon-out.png')}
+                                    />
+                                    <Text style={styles.handlerText}>
+                                        그만하기
+                                    </Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -502,4 +551,3 @@ const styles = StyleSheet.create({
         color: '#ffffff'
     }
 });
-

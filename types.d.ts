@@ -14,6 +14,7 @@ export type ScreenNavigationProp = StackNavigationProp<
 >;
 
 export type GameDataType = {
+    id: number;
     subject: string;
     name: string;
     data: Array<{
@@ -22,7 +23,7 @@ export type GameDataType = {
     }>;
 };
 export type GameType = {
-    id: string;
+    id: number;
     num: number;
     bgColor1: string;
     bgColor2: string;
@@ -57,7 +58,7 @@ export type GameResultType = {
     playedAt: Date;
 };
 export type TeamType = {
-    id: string;
+    id: number;
     name: string;
     teamColor: string;
 };

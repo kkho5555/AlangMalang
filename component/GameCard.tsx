@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
-import Text from '../component/DefaultText';
 import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import {
+    Image,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View
+} from 'react-native';
+import Text from '../component/DefaultText';
 import { GameType, ScreenProps } from '../types';
-import { widthScale, heightScale } from '../utils/Scaling';
+import { heightScale, widthScale } from '../utils/Scaling';
 
 interface IPage {
     item: Pick<
         GameType,
-        'bgColor1' | 'bgColor2' | 'title' | 'type' | 'headCount' | 'imgPath' | 'gameManual'
+        | 'bgColor1'
+        | 'bgColor2'
+        | 'title'
+        | 'type'
+        | 'headCount'
+        | 'imgPath'
+        | 'gameManual'
     >;
     navigation: ScreenProps['navigation'];
     isActive: boolean;
@@ -72,7 +84,9 @@ export default function GameCard({ item, navigation, isActive }: IPage) {
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity
                                 style={styles.button}
-                                onPress={() => navigation.navigate('SubjectSelect')}
+                                onPress={() =>
+                                    navigation.navigate('SubjectSelect')
+                                }
                             >
                                 <Text style={styles.buttonText}>게임시작</Text>
                             </TouchableOpacity>
@@ -85,7 +99,12 @@ export default function GameCard({ item, navigation, isActive }: IPage) {
                         <Text style={styles.descText}>
                             출제자 : {item.gameManual.tester}
                         </Text>
-                        <Text style={[styles.descText, { marginTop: heightScale(30) }]}>
+                        <Text
+                            style={[
+                                styles.descText,
+                                { marginTop: heightScale(30) }
+                            ]}
+                        >
                             참여자 : {item.gameManual.participant}
                         </Text>
                     </View>
@@ -103,7 +122,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         paddingHorizontal: widthScale(41),
         paddingVertical: heightScale(31),
-        position: 'relative',
+        position: 'relative'
     },
     textTypo: {
         fontWeight: '600',
@@ -171,7 +190,7 @@ const styles = StyleSheet.create({
         height: heightScale(473),
         top: 0,
         left: 0,
-        position: 'absolute',
+        position: 'absolute'
     },
     buttonContainer: {
         width: '100%',

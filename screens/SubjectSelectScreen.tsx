@@ -1,49 +1,47 @@
-import React from 'react';
+// SubjectSelect.tsx
+import React, { useEffect, useState } from 'react';
 import {
-    View,
-    StyleSheet,
-    Image,
+    ActivityIndicator,
+    Pressable,
     ScrollView,
-    Pressable
+    StyleSheet,
+    View
 } from 'react-native';
-import Text from '../component/DefaultText';
-import { ScreenProps } from '../types';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Color, Padding } from '../assets/GlobalStyles';
-import { widthScale, heightScale } from '../utils/Scaling';
+import Text from '../component/DefaultText';
 import GameHeader from '../component/GameHeader';
-import { setGameData, setGameSubject } from '../features/game/gameSlice';
-import { useAppSelector, useAppDispatch } from '../app/hooks';
+import {
+    fetchTopicList,
+    setGameData,
+    setGameSubject
+} from '../features/game/gameSlice';
+import { ScreenProps } from '../types';
+import { heightScale, widthScale } from '../utils/Scaling';
 
-export default function InGameScreen({ navigation }: ScreenProps) {
-    const [currentSubject, setCurrentSubject] = React.useState(-1);
+export default function SubjectSelect({ navigation }: ScreenProps) {
+    const [currentSubject, setCurrentSubject] = useState(-1);
+    const [loading, setLoading] = useState(true);
     const currentGame = useAppSelector((state) => state.game.currentGame);
-
-    const dispatch = useAppDispatch();
+    const subjectData = useAppSelector((state) => state.game.topicList);
     const gameData = useAppSelector((state) => state.game.gameData);
 
-    // FIXME: 백엔드 통신하면 수정될 부분
-    const subjects: { [key: string]: any } = {
-        animal: require('../assets/icons/subject/animal.png'),
-        sports: require('../assets/icons/subject/sports.png'),
-        emotion: require('../assets/icons/subject/emotion.png'),
-        korean_movie: require('../assets/icons/subject/korean_movie.png'),
-        foreign_movie: require('../assets/icons/subject/foreign_movie.png')
-    };
+    const dispatch = useAppDispatch();
 
-    const SubjectData = gameData.map((game) => {
-        return {
-            name: game.name,
-            subject: game.subject,
-            imgPath: subjects[game.subject]
+    useEffect(() => {
+        const loadTopics = async () => {
+            await dispatch(fetchTopicList(currentGame.id));
+            setLoading(false);
         };
-    });
+        loadTopics();
+    }, [dispatch, currentGame.id]);
 
     const handlerSelectSubject = (index: number) => {
         setCurrentSubject(index);
         dispatch(
             setGameSubject({
                 game: currentGame,
-                subject: SubjectData[index].subject
+                subject: subjectData[index].topicName
             })
         );
         dispatch(setGameData(gameData[index]));
@@ -51,6 +49,14 @@ export default function InGameScreen({ navigation }: ScreenProps) {
             navigation.navigate('PlayerSettings');
         }, 100);
     };
+
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <ActivityIndicator size="large" color={Color.primary} />
+            </View>
+        );
+    }
 
     return (
         <View
@@ -67,31 +73,31 @@ export default function InGameScreen({ navigation }: ScreenProps) {
             />
             <ScrollView>
                 <View style={styles.subContainer}>
-                    {SubjectData.map((subject, index) => (
+                    {subjectData.map((subject, index) => (
                         <Pressable
                             key={index}
                             onPress={() =>
-                                subject.imgPath
+                                subject.topicImg
                                     ? handlerSelectSubject(index)
                                     : ''
                             }
                         >
-                            {subject.imgPath ? (
+                            {subject.topicImg ? (
                                 <View
                                     key={index}
                                     style={[
                                         styles.subjectWrapper,
                                         currentSubject === index &&
-                                        styles.currentSubjectWrapper
+                                            styles.currentSubjectWrapper
                                     ]}
                                 >
-                                    <Image
+                                    {/* <Image
                                         style={styles.subjectIcon}
                                         resizeMode="cover"
                                         source={subject.imgPath}
-                                    />
+                                    /> */}
                                     <Text style={styles.subjectText}>
-                                        {subject.name}
+                                        {subject.topicName}
                                     </Text>
                                 </View>
                             ) : (
@@ -102,18 +108,18 @@ export default function InGameScreen({ navigation }: ScreenProps) {
                                         styles.pendingSubjectWrapper
                                     ]}
                                 >
-                                    <Image
+                                    {/* <Image
                                         style={styles.subjectIcon}
                                         resizeMode="cover"
-                                        source={subject.imgPath}
-                                    />
+                                        source={subject.topicImg}
+                                    /> */}
                                     <Text
                                         style={[
                                             styles.subjectText,
                                             styles.pendingSubjectText
                                         ]}
                                     >
-                                        {subject.name}
+                                        {subject.topicName}
                                     </Text>
                                 </View>
                             )}
@@ -132,6 +138,12 @@ const styles = StyleSheet.create({
         backgroundColor: Color.background,
         paddingHorizontal: widthScale(30),
         paddingTop: Padding.ContainerPaddingTop
+    },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: Color.background
     },
     subContainer: {
         flex: 1,
