@@ -24,7 +24,7 @@
             "supportsTablet": true,
             "requireFullScreen": true,
             "infoPlist": {
-                "UIViewControllerBasedStatusBarAppearance": "YES"
+                // "UIViewControllerBasedStatusBarAppearance": "YES"
             },
             "bundleIdentifier": "com.exithere.alangmalang"
         },

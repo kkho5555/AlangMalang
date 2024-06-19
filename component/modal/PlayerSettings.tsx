@@ -33,39 +33,61 @@ export default function ScoreReset({
     modalVisible,
     setModalVisible
 }: IScoreResetProps) {
-    //get teamList
     const teamList = useAppSelector((state) => state.game.teamList);
     const [tmpValue, onChangeTmpValue] = useState('');
     const [tmpTeamList, onChangeTmpTeamList] = useState(teamList);
     const [focusedTeamIndex, setFocusedTeamIndex] = useState(-1);
-    let userId = '';
+    const [userId, setUserId] = useState('');
     const dispatch = useAppDispatch();
 
-    const addTeam = async (index: number) => {
-        const tmpUserId = await AsyncStorage.getItem('userId');
-        if (tmpUserId) {
-            userId = tmpUserId;
-            createTeam({
-                teamName: '',
-                userId: tmpUserId
-            });
+    useEffect(() => {
+        const fetchUserId = async () => {
+            const tmpUserId = await AsyncStorage.getItem('userId');
+            if (tmpUserId) {
+                setUserId(tmpUserId);
+            }
+        };
+        fetchUserId();
+    }, []);
+
+    const addTeam = async () => {
+        if (userId) {
+            dispatch(
+                createTeam({
+                    teamName: '상큼한 에메랄드',
+                    userId
+                })
+            );
         }
     };
 
     const removeTeamAction = (index: number) => {
-        removeTeam({
-            teamId: tmpTeamList[index].id,
-            userId
-        });
+        if (userId) {
+            dispatch(
+                removeTeam({
+                    teamId: tmpTeamList[index].id,
+                    userId
+                })
+            );
+        }
     };
 
     const handleTeamNameChange = (text: string, index: number) => {
         onChangeTmpValue(text);
-        onChangeTmpTeamList(
-            teamList.map((team, i) =>
-                i === index ? { ...team, name: text } : team
-            )
+        const updatedTeamList = tmpTeamList.map((team, i) =>
+            i === index ? { ...team, name: text } : team
         );
+        onChangeTmpTeamList(updatedTeamList);
+    };
+
+    const handleUpdateTeam = async (teamId: number, teamName: string) => {
+        if (userId) {
+            await updateTeam({
+                teamId,
+                teamName,
+                userId
+            });
+        }
     };
 
     const handlerBackground = (e: GestureResponderEvent) => {
@@ -77,7 +99,7 @@ export default function ScoreReset({
 
     useEffect(() => {
         onChangeTmpTeamList(teamList);
-    }, [teamList]);
+    }, [teamList, dispatch]);
 
     return (
         <Modal
@@ -150,15 +172,13 @@ export default function ScoreReset({
                                                         onPress={async () => {
                                                             dispatch(
                                                                 setTeams(
-                                                                    teamList
+                                                                    tmpTeamList
                                                                 )
                                                             );
-                                                            await updateTeam({
-                                                                teamId: team.id,
-                                                                teamName:
-                                                                    tmpValue,
-                                                                userId
-                                                            });
+                                                            await handleUpdateTeam(
+                                                                team.id,
+                                                                team.name
+                                                            );
                                                         }}
                                                     >
                                                         <View
@@ -215,9 +235,7 @@ export default function ScoreReset({
                                         >
                                             상큼한 에메랄드
                                         </Text>
-                                        <TouchableOpacity
-                                            onPress={() => addTeam(1)}
-                                        >
+                                        <TouchableOpacity onPress={addTeam}>
                                             <Image
                                                 resizeMode="cover"
                                                 style={styles.iconImages}
